@@ -6,11 +6,9 @@
   "author": "Billy Irianto",
   "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate-testing": "NODE_ENV=test npx sequelize db:migrate",
-    "undo-migration-testing": "NODE_ENV=test npx sequelize db:migrate:undo",
-    "deep-undo-migration-testing": "NODE_ENV=test npx sequelize db:migrate:undo:all",
-    "migrate": "NODE_ENV=production npx sequelize db:migrate",
+    "migrate": "npx sequelize db:migrate",
+    "seed": "npx sequelize db:seed:all",
+    "undo-seed": "npx sequelize db:seed:undo:all",
     "undo-migration": "NODE_ENV=production npx sequelize db:migrate:undo",
     "deep-undo-migration": "NODE_ENV=production npx sequelize db:migrate:undo:all",
     "server": "npx pm2 start ecosystem.config.js --env production"

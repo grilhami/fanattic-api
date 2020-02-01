@@ -20,21 +20,21 @@ module.exports = {
         },
       });
 
-      const dp = decrypt(ep); // decrypted password
-      if (!userObj) {
-        console.log('User not found !');
-        return res.status(404).json({
-          message: 'Wrong email, username, or password',
-          error: 'Wrong email, username, or password',
-        });
-      }
-      if (!compareHash(dp, userObj.password)) {
-        console.log("Password didn't match!");
-        return res.status(401).json({
-          message: 'Wrong email, username, or password',
-          error: 'Wrong email, username, or password',
-        });
-      }
+      // const dp = decrypt(ep); // decrypted password
+      // if (!userObj) {
+      //   console.log('User not found !');
+      //   return res.status(404).json({
+      //     message: 'Wrong email, username, or password',
+      //     error: 'Wrong email, username, or password',
+      //   });
+      // }
+      // if (!compareHash(dp, userObj.password)) {
+      //   console.log("Password didn't match!");
+      //   return res.status(401).json({
+      //     message: 'Wrong email, username, or password',
+      //     error: 'Wrong email, username, or password',
+      //   });
+      // }
 
       return sequelize
         .transaction(t =>
