@@ -31,5 +31,6 @@ module.exports = {
         ignoreRegExpLiterals: true,
       },
     ],
+    "camelcase": "off"
   }
 };
