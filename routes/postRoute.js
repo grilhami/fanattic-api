@@ -1,10 +1,16 @@
 const { Router } = require('express');
-const { postC } = require('../controllers');
+const { postC, commentC } = require('../controllers');
 
 const router = Router();
 
 // const { auth, parser } = require('../helpers');
 
-router.post('/', postC.create);
+router.get('/feed/:userId', postC.getFeed);
+
+router.post('/create', postC.create);
+router.post('/comment', commentC.create);
+
+router.post('/add-to-bookmarks', postC.addToSavedPosts);
+router.post('/remove-from-bookmarks', postC.removeFromSavedPosts);
 
 module.exports = router;
