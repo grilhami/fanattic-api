@@ -1,37 +1,23 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('posts', {
+    return queryInterface.createTable('merchandise_images', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userId: {
+      merchandiseId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'users',
+          model: 'merchandises',
           key: 'id',
         },
       },
-      image: {
+      url: {
         allowNull: false,
         type: Sequelize.STRING,
-      },
-      caption: {
-        allowNull: false,
-        type: Sequelize.TEXT,
-      },
-      likes: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-      },
-      shares: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,
@@ -44,6 +30,6 @@ module.exports = {
     });
   },
   down: queryInterface => {
-    return queryInterface.dropTable('posts');
+    return queryInterface.dropTable('merchandise_images');
   },
 };

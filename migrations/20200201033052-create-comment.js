@@ -10,12 +10,25 @@ module.exports = {
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       postId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'posts',
+          key: 'id',
+        },
       },
       commentId: {
+        allowNull: true,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'comments',
+          key: 'id',
+        },
       },
       content: {
         allowNull: false,

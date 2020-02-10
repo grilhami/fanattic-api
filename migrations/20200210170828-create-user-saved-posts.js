@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('posts', {
+    return queryInterface.createTable('user_saved_posts', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -8,30 +8,18 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       userId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
           key: 'id',
         },
       },
-      image: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      caption: {
-        allowNull: false,
-        type: Sequelize.TEXT,
-      },
-      likes: {
-        allowNull: false,
+      postId: {
         type: Sequelize.INTEGER,
-        defaultValue: 0,
-      },
-      shares: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+        references: {
+          model: 'posts',
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,
@@ -44,6 +32,6 @@ module.exports = {
     });
   },
   down: queryInterface => {
-    return queryInterface.dropTable('posts');
+    return queryInterface.dropTable('user_saved_posts');
   },
 };

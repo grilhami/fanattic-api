@@ -8,7 +8,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       email: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
       },
       username: {
@@ -16,6 +16,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       fullName: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       password: {
@@ -23,6 +24,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       phone: {
+        allowNull: true,
         type: Sequelize.STRING,
       },
       profilePicture: {
