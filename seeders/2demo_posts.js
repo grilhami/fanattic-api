@@ -8,7 +8,7 @@ module.exports = {
         {
           userId: 1,
           image: 'blank',
-          caption: 'Big memes',
+          caption: 'Just finished an amazing jam session',
           likes: 10000,
           shares: 1000,
           createdAt: new Date(),
@@ -17,7 +17,7 @@ module.exports = {
         {
           userId: 1,
           image: 'blank',
-          caption: 'Big memes',
+          caption: 'Just finished an amazing jam session',
           likes: 10000,
           shares: 1000,
           createdAt: new Date(),
@@ -26,7 +26,7 @@ module.exports = {
         {
           userId: 1,
           image: 'blank',
-          caption: 'Big memes',
+          caption: 'Just finished an amazing jam session',
           likes: 10000,
           shares: 1000,
           createdAt: new Date(),
@@ -35,7 +35,7 @@ module.exports = {
         {
           userId: 1,
           image: 'blank',
-          caption: 'Big memes',
+          caption: 'Just finished an amazing jam session',
           likes: 10000,
           shares: 1000,
           createdAt: new Date(),
@@ -44,7 +44,7 @@ module.exports = {
         {
           userId: 1,
           image: 'blank',
-          caption: 'Big memes',
+          caption: 'Just finished an amazing jam session',
           likes: 10000,
           shares: 1000,
           createdAt: new Date(),
