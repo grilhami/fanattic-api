@@ -8,7 +8,7 @@ const { validate } = require('../helpers').validator;
 const { errorHandler, jwt } = require('../helpers');
 
 module.exports = {
-  login: async (req, res, next) => {
+  login: async (req, res) => {
     try {
       const { email, ep } = req.body;
       const userObj = await user.findOne({
@@ -20,21 +20,21 @@ module.exports = {
         },
       });
 
-      // const dp = decrypt(ep); // decrypted password
-      // if (!userObj) {
-      //   console.log('User not found !');
-      //   return res.status(404).json({
-      //     message: 'Wrong email, username, or password',
-      //     error: 'Wrong email, username, or password',
-      //   });
-      // }
-      // if (!compareHash(dp, userObj.password)) {
-      //   console.log("Password didn't match!");
-      //   return res.status(401).json({
-      //     message: 'Wrong email, username, or password',
-      //     error: 'Wrong email, username, or password',
-      //   });
-      // }
+      const dp = decrypt(ep); // decrypted password
+      if (!userObj) {
+        console.log('User not found !');
+        return res.status(404).json({
+          message: 'Wrong email, username, or password',
+          error: 'Wrong email, username, or password',
+        });
+      }
+      if (!compareHash(dp, userObj.password)) {
+        console.log("Password didn't match!");
+        return res.status(401).json({
+          message: 'Wrong email, username, or password',
+          error: 'Wrong email, username, or password',
+        });
+      }
 
       return sequelize
         .transaction(t =>
@@ -45,25 +45,25 @@ module.exports = {
             { transaction: t },
           ),
         )
-        .then(result => {
+        .then(() => {
           const token = jwt.createToken({
             id: userObj.id,
-            email: result.email,
+            email: userObj.email,
           });
           return res.status(200).json({
             message: 'Login Successful',
-            result: {
-              token,
+            user: {
               id: userObj.id,
-              email: result.email,
-              profilePicture: result.profilePicture,
-              phone: result.phone,
+              email: userObj.email,
+              profilePicture: userObj.profilePicture,
+              phone: userObj.phone,
             },
+            token,
           });
         })
         .catch(err => errorHandler(res, err));
     } catch (err) {
-      errorHandler(res, err);
+      return errorHandler(res, err);
     }
   },
   register: (req, res) => {
@@ -133,69 +133,6 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
-  // User Login
-  // login(req, res) {
-  //   const { email, ep, from } = req.body;
-  //   user
-  //     .findOne({
-  //       where: { email },
-  //     })
-  //     .then(userObj => {
-  //       const dp = decrypt(ep); // decrypted password
-  //       if (!userObj) {
-  //         console.log('User not found !');
-  //         return res.status(404).json({
-  //           message: 'Anda salah memasukkan email, kata sandi, atau keduanya.',
-  //           error: 'Anda salah memasukkan email, kata sandi, atau keduanya.',
-  //         });
-  //       }
-  //       if (!compareHash(dp, userObj.password)) {
-  //         console.log("Password didn't match!");
-  //         return res.status(401).json({
-  //           message: 'Anda salah memasukkan email, kata sandi, atau keduanya.',
-  //           error: 'Anda salah memasukkan email, kata sandi, atau keduanya.',
-  //         });
-  //       }
-
-  //       if (from) {
-  //         if (userObj.attendees.length === 0) {
-  //           return res.status(401).json({
-  //             message: `"Akses ditolak, anda belum memiliki kelas di purwadhika."`,
-  //             error: `"Akses ditolak, anda belum memiliki kelas di purwadhika."`,
-  //           });
-  //         }
-  //       }
-
-  //       return sequelize
-  //         .transaction(t =>
-  //           userObj.update(
-  //             {
-  //               lastLogin: moment(),
-  //             },
-  //             { transaction: t },
-  //           ),
-  //         )
-  //         .then(result => {
-  //           const token = jwt.createToken({
-  //             id: userObj.id,
-  //             email: result.email,
-  //           });
-  //           return res.status(200).json({
-  //             message: 'Login Successful',
-  //             result: {
-  //               token,
-  //               id: userObj.id,
-  //               email: result.email,
-  //               profilePicture: result.profilePicture,
-  //               phone: result.phone,
-  //               isVerified: result.isVerified,
-  //             },
-  //           });
-  //         })
-  //         .catch(err => errorHandler(res, err));
-  //     })
-  //     .catch(err => errorHandler(res, err));
-  // },
   // Keep Login / Get Dashboard Data
   getUserData(req, res) {
     console.log('Keep login', req.user.email);
@@ -240,36 +177,36 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
-  // emailConfirmation: (req, res) => {
-  //   user
-  //     .findOne({
-  //       where: {
-  //         id: req.user.id,
-  //         email: req.user.email,
-  //       },
-  //     })
-  //     .then(userObj => {
-  //       if (!userObj) {
-  //         return res.status(404).json({ message: 'User not found !' });
-  //       }
-  //       if (userObj.isVerified) {
-  //         return res.status(200).json({ message: 'Email is already verified' });
-  //       }
+  verify: (req, res) => {
+    user
+      .findOne({
+        where: {
+          id: req.user.id,
+          email: req.user.email,
+        },
+      })
+      .then(userObj => {
+        if (!userObj) {
+          return res.status(404).json({ message: 'User not found !' });
+        }
+        if (userObj.isVerified) {
+          return res.status(200).json({ message: 'Email is already verified' });
+        }
 
-  //       return sequelize
-  //         .transaction(t =>
-  //           userObj.update(
-  //             {
-  //               isVerified: true,
-  //             },
-  //             { transaction: t },
-  //           ),
-  //         )
-  //         .then(() =>
-  //           res.status(200).json({ message: 'Email is now verified' }),
-  //         )
-  //         .catch(err => errorHandler(res, err));
-  //     })
-  //     .catch(err => errorHandler(res, err));
-  // },
+        return sequelize
+          .transaction(t =>
+            userObj.update(
+              {
+                isVerified: true,
+              },
+              { transaction: t },
+            ),
+          )
+          .then(() =>
+            res.status(200).json({ message: 'Email is now verified' }),
+          )
+          .catch(err => errorHandler(res, err));
+      })
+      .catch(err => errorHandler(res, err));
+  },
 };
