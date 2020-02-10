@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "description": "API",
   "main": "index.js",
-  "author": "Billy Irianto",
-  "license": "MIT",
+  "author": "fanattic dev",
   "scripts": {
     "migrate": "npx sequelize db:migrate",
     "seed": "npx sequelize db:seed:all",
