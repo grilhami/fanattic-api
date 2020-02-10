@@ -6,7 +6,7 @@ const cors = require('cors');
 const bearerToken = require('express-bearer-token');
 // const config = require('./config.json');
 
-const port = process.env.PORT || 3333;
+const port = process.env.PORT || 4771;
 const environment = process.env.NODE_ENV || 'development';
 
 const app = express({ defaultErrorHandler: false });
