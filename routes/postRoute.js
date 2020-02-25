@@ -13,4 +13,6 @@ router.post('/comment', commentC.create);
 router.post('/add-to-bookmarks', postC.addToSavedPosts);
 router.post('/remove-from-bookmarks', postC.removeFromSavedPosts);
 
+router.post('/getPostByUser', postC.getPostUser);
+
 module.exports = router;

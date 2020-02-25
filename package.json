@@ -10,7 +10,8 @@
     "undo-seed": "npx sequelize db:seed:undo:all",
     "undo-migration": "NODE_ENV=production npx sequelize db:migrate:undo",
     "deep-undo-migration": "NODE_ENV=production npx sequelize db:migrate:undo:all",
-    "server": "npx pm2 start ecosystem.config.js --env production"
+    "server": "npx pm2 start ecosystem.config.js --env production",
+    "start": "node index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

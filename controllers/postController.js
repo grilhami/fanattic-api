@@ -127,4 +127,21 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  getPostUser: (req, res) => {
+    const { userIdUser, offsetUser } = req.body;
+    const query = {
+      where: {
+        userId: userIdUser,
+      },
+      // attributes: ['id', 'template_name']
+    };
+    if (typeof offsetUser !== 'undefined') {
+      query.offset = offsetUser;
+      query.limit = 10;
+    }
+    post
+      .find(query)
+      .then(data => res.status(200).json(data))
+      .catch(err => errorHandler(res, err));
+  },
 };
