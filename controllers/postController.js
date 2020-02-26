@@ -127,8 +127,14 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  // eslint-disable-next-line consistent-return
   getPostUser: (req, res) => {
     const { userIdUser, offsetUser } = req.body;
+    if (typeof userIdUser === 'undefined') {
+      return res.status(400).json({
+        message: `Id user is ${typeof userIdUser}`,
+      });
+    }
     const query = {
       where: {
         userId: userIdUser,
