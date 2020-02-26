@@ -10,8 +10,15 @@ const { errorHandler } = require('../helpers');
 // const { Op } = Sequelize;
 
 module.exports = {
+  // eslint-disable-next-line consistent-return
   getFeed: (req, res) => {
     const { userId } = req.params;
+    if (!userId) {
+      return res.status(400).json({
+        message: 'userId is required',
+        debug: req.body,
+      });
+    }
     post
       .findAll({
         where: {
@@ -59,12 +66,19 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  // eslint-disable-next-line consistent-return
   create: (req, res) => {
     const { image, caption, userId } = req.body;
-
+    if (!image || !caption || !userId) {
+      return res.status(400).json({
+        message: `userId, image and caption is required`,
+        debug: req.body,
+      });
+    }
     sequelize
       .transaction(async t => {
-        const postObj = await post.create(
+        // eslint-disable-next-line no-return-await
+        return await post.create(
           {
             userId,
             image,
@@ -72,8 +86,6 @@ module.exports = {
           },
           { transaction: t },
         );
-
-        return postObj;
       })
       .then(result => {
         return res.status(200).json({
@@ -83,19 +95,25 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  // eslint-disable-next-line consistent-return
   addToSavedPosts: (req, res) => {
     const { userId, postId } = req.body;
+    if (!userId || !postId) {
+      return res.status(400).json({
+        message: `userId and postId is required`,
+        debug: req.body,
+      });
+    }
     sequelize
       .transaction(async t => {
-        const savedPostObj = await user_saved_posts.create(
+        // eslint-disable-next-line no-return-await
+        return await user_saved_posts.create(
           {
             userId,
             postId,
           },
           { transaction: t },
         );
-
-        return savedPostObj;
       })
       .then(result => {
         return res.status(200).json({
@@ -105,8 +123,15 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  // eslint-disable-next-line consistent-return
   removeFromSavedPosts: (req, res) => {
     const { userId, postId } = req.body;
+    if (!userId || !postId) {
+      return res.status(400).json({
+        message: `userId and postId is required`,
+        debug: req.body,
+      });
+    }
     sequelize
       .transaction(async t => {
         const savedPostObj = await user_saved_posts.findOne({
@@ -132,7 +157,8 @@ module.exports = {
     const { userIdUser, offsetUser } = req.body;
     if (typeof userIdUser === 'undefined') {
       return res.status(400).json({
-        message: `Id user is ${typeof userIdUser}`,
+        message: `Id user is required`,
+        debug: req.body,
       });
     }
     const query = {

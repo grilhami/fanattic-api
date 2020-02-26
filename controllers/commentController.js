@@ -4,12 +4,19 @@ const { errorHandler } = require('../helpers');
 // const { Op } = Sequelize;
 
 module.exports = {
+  // eslint-disable-next-line consistent-return
   create: (req, res) => {
     const { userId, postId, commentId, content } = req.body;
-
+    if (!userId || !postId || !commentId || !content) {
+      return res.status(400).json({
+        message: `userId, postId, content, and commentId is required`,
+        debug: req.body,
+      });
+    }
     sequelize
       .transaction(async t => {
-        const commentObj = await comment.create(
+        // eslint-disable-next-line no-return-await
+        return await comment.create(
           {
             userId,
             postId,
@@ -18,8 +25,6 @@ module.exports = {
           },
           { transaction: t },
         );
-
-        return commentObj;
       })
       .then(result => {
         return res.status(200).json({
