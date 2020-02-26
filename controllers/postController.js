@@ -141,7 +141,12 @@ module.exports = {
     }
     post
       .find(query)
-      .then(data => res.status(200).json(data))
+      .then(data =>
+        res.status(200).json({
+          message: 'show Post by user',
+          data,
+        }),
+      )
       .catch(err => errorHandler(res, err));
   },
 };
