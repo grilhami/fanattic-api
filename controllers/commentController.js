@@ -14,24 +14,25 @@ module.exports = {
       });
     }
     sequelize
-      .transaction(async t => {
-        // eslint-disable-next-line no-return-await
-        return await comment.create(
-          {
-            userId,
-            postId,
-            commentId: commentId || null,
-            content,
-          },
-          { transaction: t },
-        );
-      })
-      .then(result => {
-        return res.status(200).json({
+      .transaction(
+        async t =>
+          // eslint-disable-next-line no-return-await
+          await comment.create(
+            {
+              userId,
+              postId,
+              commentId: commentId || null,
+              content,
+            },
+            { transaction: t },
+          ),
+      )
+      .then(result =>
+        res.status(200).json({
           message: 'create comment',
           result,
-        });
-      })
+        }),
+      )
       .catch(err => errorHandler(res, err));
   },
 };
