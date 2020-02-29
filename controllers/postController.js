@@ -68,8 +68,8 @@ module.exports = {
   },
   // eslint-disable-next-line consistent-return
   create: (req, res) => {
-    const { image, caption, userId } = req.body;
-    if (!image || !caption || !userId) {
+    const { caption, userId } = req.body;
+    if (!caption || !userId || !req.file) {
       return res.status(400).json({
         message: `userId, image and caption is required`,
         debug: req.body,
@@ -81,18 +81,18 @@ module.exports = {
         return await post.create(
           {
             userId,
-            image,
+            image: req.file.filename,
             caption,
           },
           { transaction: t },
         );
       })
-      .then(result => {
-        return res.status(200).json({
+      .then(result =>
+        res.status(200).json({
           message: 'create Post',
           result,
-        });
-      })
+        }),
+      )
       .catch(err => errorHandler(res, err));
   },
   // eslint-disable-next-line consistent-return
@@ -180,5 +180,32 @@ module.exports = {
         }),
       )
       .catch(err => errorHandler(res, err));
+  },
+  toggleLikePost: (req, res) => {
+    const { postId, status } = req.body;
+    switch (status) {
+      case 'add':
+        post
+          .increment('likes', {
+            where: {
+              id: postId,
+            },
+          })
+          .then(() => res.status(200).json())
+          .catch(err => errorHandler(res, err));
+        break;
+      case 'remove':
+        post
+          .decrement('likes', {
+            where: {
+              id: postId,
+            },
+          })
+          .then(() => res.status(200).json())
+          .catch(err => errorHandler(res, err));
+        break;
+      default:
+        res.status(400).json({ message: 'status invalid' });
+    }
   },
 };
