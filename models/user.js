@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       profilePicture: DataTypes.STRING,
       isVerified: DataTypes.BOOLEAN,
       lastLogin: DataTypes.DATE,
+      fcmToken: DataTypes.STRING,
     },
     {},
   );
