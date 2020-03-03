@@ -152,7 +152,7 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
-  // eslint-disable-next-line consistent-return
+
   getPostUser: (req, res) => {
     const { userIdUser, offsetUser } = req.body;
     if (typeof userIdUser === 'undefined') {
@@ -171,7 +171,7 @@ module.exports = {
       query.offset = offsetUser;
       query.limit = 10;
     }
-    post
+    return post
       .findAll(query)
       .then(data =>
         res.status(200).json({
