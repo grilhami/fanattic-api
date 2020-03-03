@@ -212,4 +212,12 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  getMerchandise: (req,res) => {
+    const { userId } = req.params;
+
+  },
+  getEvent: (req,res) => {
+    const { userId } = req.params;
+
+}
 };
