@@ -13,7 +13,7 @@ router.post('/post', uploadPost.single('image'), authMiddleware, postC.create);
 router.post('/getPostUser', postC.getPostUser);
 
 router.post('/comment', authMiddleware, commentC.create);
-router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
+// router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
 
 router.post('/add-to-bookmarks', authMiddleware, postC.addToSavedPosts);
 router.post(

@@ -3,7 +3,7 @@ const { generateHash, compareHash, decrypt } = require('../helpers').encryption;
 const { Sequelize, sequelize, user } = require('../models');
 
 const { Op } = Sequelize;
-const { validate } = require('../helpers').validator;
+const { validator } = require('../helpers');
 
 const { errorHandler, jwt } = require('../helpers');
 
@@ -90,7 +90,7 @@ module.exports = {
           });
         }
 
-        const results = validate({
+        const results = validator({
           email,
           username,
           fullName,
