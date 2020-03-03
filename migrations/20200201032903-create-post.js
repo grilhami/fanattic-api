@@ -33,6 +33,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
+      isSocial: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      isDeleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

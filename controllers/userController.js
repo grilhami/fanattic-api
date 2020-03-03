@@ -72,10 +72,10 @@ module.exports = {
   },
   // eslint-disable-next-line consistent-return
   register: (req, res) => {
-    const { email, username, ep, phone } = req.body;
-    if (!email || !username || !ep || !phone) {
+    const { email, username, fullName, ep, phone } = req.body;
+    if (!email || !username || !fullName || !ep || !phone) {
       return res.status(400).json({
-        message: 'email, username, ep and phone is required',
+        message: 'email, username, fullName, ep and phone is required',
         debug: req.body,
       });
     }
@@ -93,6 +93,7 @@ module.exports = {
         const results = validate({
           email,
           username,
+          fullName,
           ep,
           phone,
         });
@@ -111,6 +112,7 @@ module.exports = {
                   email,
                   username,
                   password: generateHash(dp),
+                  fullName,
                   phone,
                   isVerified: false,
                   lastLogin: moment(),
@@ -126,8 +128,10 @@ module.exports = {
               result: {
                 token,
                 email: result.email,
+                fullName,
                 profilePicture: result.profilePicture,
                 phone: result.phone,
+                isVerified: result.isVerified,
               },
             });
           })
