@@ -10,6 +10,7 @@ module.exports = {
           username: 'test',
           password: 'test',
           phone: '08181818',
+          fullName: 'Leroy Jenkins',
           isVerified: true,
           lastLogin: new Date(),
           createdAt: new Date(),
