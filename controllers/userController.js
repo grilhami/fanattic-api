@@ -11,6 +11,12 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { email, ep } = req.body;
+      if (!email || !ep) {
+        return res.status(400).json({
+          message: `email and ep is required`,
+          debug: req.body,
+        });
+      }
       const userObj = await user.findOne({
         where: {
           [Op.or]: {
@@ -22,14 +28,12 @@ module.exports = {
 
       const dp = decrypt(ep); // decrypted password
       if (!userObj) {
-        console.log('User not found !');
         return res.status(404).json({
           message: 'Wrong email, username, or password',
           error: 'Wrong email, username, or password',
         });
       }
       if (!compareHash(dp, userObj.password)) {
-        console.log("Password didn't match!");
         return res.status(401).json({
           message: 'Wrong email, username, or password',
           error: 'Wrong email, username, or password',
@@ -66,8 +70,15 @@ module.exports = {
       return errorHandler(res, err);
     }
   },
+  // eslint-disable-next-line consistent-return
   register: (req, res) => {
     const { email, username, ep, phone } = req.body;
+    if (!email || !username || !ep || !phone) {
+      return res.status(400).json({
+        message: 'email, username, ep and phone is required',
+        debug: req.body,
+      });
+    }
     const dp = decrypt(ep); // decrypted password
     user
       .findOne({ where: { email } })
@@ -79,10 +90,6 @@ module.exports = {
           });
         }
 
-        console.log(
-          'Registration Attempt || ',
-          `Email: ${email} at ${new Date()}`,
-        );
         const results = validate({
           email,
           username,
@@ -91,7 +98,6 @@ module.exports = {
         });
 
         if (results.length > 0) {
-          console.log('Invalid Form Data', results);
           return res
             .status(422)
             .send({ message: 'Invalid Form', error: 'Invalid Form', results });
@@ -114,7 +120,6 @@ module.exports = {
               .then(userObj => userObj),
           )
           .then(result => {
-            console.log('Registration success');
             const token = jwt.createToken({ id: result.id });
             return res.status(200).json({
               message: 'Registration Successful',
@@ -127,15 +132,13 @@ module.exports = {
             });
           })
           .catch(err => {
-            console.log('Registration failure');
             return errorHandler(res, err);
           });
       })
       .catch(err => errorHandler(res, err));
   },
   // Keep Login / Get Dashboard Data
-  getUserData(req, res) {
-    console.log('Keep login', req.user.email);
+  getUserData: (req, res) => {
     user
       .findOne({
         where: {

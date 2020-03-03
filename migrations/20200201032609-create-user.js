@@ -35,6 +35,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.BOOLEAN,
       },
+      fcmToken: {
+        defaultValue: false,
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
       lastLogin: {
         allowNull: false,
         type: Sequelize.DATE,

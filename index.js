@@ -11,6 +11,8 @@ const environment = process.env.NODE_ENV || 'development';
 
 const app = express({ defaultErrorHandler: false });
 
+require('dotenv').config({ path: '.env' });
+
 app.use(
   logger('dev', {
     skip: req => {
@@ -22,7 +24,7 @@ app.use(bodyParser.json({ limit: '500mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
 app.use(express.json({ limit: '500mb' }));
 app.use(express.static('public'));
-app.use(bearerToken());
+// app.use(bearerToken());
 
 app.set('etag', false);
 app.use(cors());
