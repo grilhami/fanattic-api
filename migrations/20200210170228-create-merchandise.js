@@ -8,10 +8,16 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       price: {
+        allowNull: false,
         type: Sequelize.INTEGER,
+      },
+      description: {
+        allowNull: false,
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,
