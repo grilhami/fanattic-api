@@ -10,7 +10,6 @@ const { errorHandler } = require('../helpers');
 // const { Op } = Sequelize;
 
 module.exports = {
-  // eslint-disable-next-line consistent-return
   getFeed: (req, res) => {
     const { userId } = req.params;
     if (!userId) {
@@ -19,7 +18,7 @@ module.exports = {
         debug: req.body,
       });
     }
-    post
+    return post
       .findAll({
         where: {
           userId,
@@ -66,7 +65,6 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
-  // eslint-disable-next-line consistent-return
   create: (req, res) => {
     const { caption, userId } = req.body;
     if (!caption || !userId || !req.file) {
@@ -75,10 +73,9 @@ module.exports = {
         debug: req.body,
       });
     }
-    sequelize
+    return sequelize
       .transaction(async t => {
-        // eslint-disable-next-line no-return-await
-        return await post.create(
+        const postObj = await post.create(
           {
             userId,
             image: req.file.filename,
@@ -86,6 +83,8 @@ module.exports = {
           },
           { transaction: t },
         );
+
+        return postObj;
       })
       .then(result =>
         res.status(200).json({
@@ -95,7 +94,6 @@ module.exports = {
       )
       .catch(err => errorHandler(res, err));
   },
-  // eslint-disable-next-line consistent-return
   addToSavedPosts: (req, res) => {
     const { userId, postId } = req.body;
     if (!userId || !postId) {
@@ -104,16 +102,16 @@ module.exports = {
         debug: req.body,
       });
     }
-    sequelize
+    return sequelize
       .transaction(async t => {
-        // eslint-disable-next-line no-return-await
-        return await user_saved_posts.create(
+        const savedPostObj = await user_saved_posts.create(
           {
             userId,
             postId,
           },
           { transaction: t },
         );
+        return savedPostObj;
       })
       .then(result => {
         return res.status(200).json({
@@ -123,7 +121,6 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
-  // eslint-disable-next-line consistent-return
   removeFromSavedPosts: (req, res) => {
     const { userId, postId } = req.body;
     if (!userId || !postId) {
@@ -132,7 +129,7 @@ module.exports = {
         debug: req.body,
       });
     }
-    sequelize
+    return sequelize
       .transaction(async t => {
         const savedPostObj = await user_saved_posts.findOne({
           where: {

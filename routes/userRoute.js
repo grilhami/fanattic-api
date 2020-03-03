@@ -1,6 +1,4 @@
 const { Router } = require('express');
-const { getEvent } = require('../controllers/userController');
-const { getMerchandise } = require('../controllers/userController');
 const { userC } = require('../controllers');
 
 const router = Router();
@@ -10,7 +8,6 @@ const router = Router();
 router.post('/register', userC.register);
 router.post('/login', userC.login);
 
-router.get('/merchandise/:userId', getMerchandise);
-router.get('/event/:userId', getEvent);
+router.get('/event/:userId', userC.getEvent);
 
 module.exports = router;

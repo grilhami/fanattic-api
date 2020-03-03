@@ -11,7 +11,9 @@ const environment = process.env.NODE_ENV || 'development';
 
 const app = express({ defaultErrorHandler: false });
 
-require('dotenv').config({ path: '.env' });
+const dotenv = require('dotenv');
+
+dotenv.config({ path: '.env' });
 
 app.use(
   logger('dev', {
@@ -24,7 +26,7 @@ app.use(bodyParser.json({ limit: '500mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
 app.use(express.json({ limit: '500mb' }));
 app.use(express.static('public'));
-// app.use(bearerToken());
+app.use(bearerToken());
 
 app.set('etag', false);
 app.use(cors());
@@ -56,10 +58,11 @@ app.get('/', (req, res) => {
     .send(`Welcome to Fanattic API Running in ${environment} mode`);
 });
 
-const { userRoute, postRoute } = require('./routes');
+const { userRoute, postRoute, merchandiseRoute } = require('./routes');
 
 app.use('/user', userRoute);
 app.use('/post', postRoute);
+app.use('/merchandise', merchandiseRoute);
 
 app.listen(port, () =>
   console.log(
