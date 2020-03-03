@@ -172,7 +172,7 @@ module.exports = {
       query.limit = 10;
     }
     post
-      .find(query)
+      .findAll(query)
       .then(data =>
         res.status(200).json({
           message: 'show Post by user',
