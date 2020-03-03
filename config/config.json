@@ -16,9 +16,10 @@
   },
   "production": {
     "username": "fanatticdev",
-    "password": "fannatic123;",
+    "password": "fanatic123;",
     "database": "fanattic_master",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "connectTimeout": 60000
   }
 }
