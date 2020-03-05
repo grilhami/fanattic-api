@@ -12,8 +12,7 @@ module.exports = {
           estPrice: 5000000,
           description:
             'Get your tickets now to the hottest musical festival of the season! Located in the heart of the city, come and enjoy the musical wonders of some of the greatest bands Indonesia has to offer. Tickets are limited and are on sale for a limited amount of time. Book yours now!',
-
-          links: ['tokopedia.tickets/memes', 'tiket.co/memers'],
+          links: JSON.stringify(['tokopedia.tickets/memes', 'tiket.co/memers']),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -24,8 +23,7 @@ module.exports = {
           estPrice: 5000000,
           description:
             'Get your tickets now to the hottest musical festival of the season! Located in the heart of the city, come and enjoy the musical wonders of some of the greatest bands Indonesia has to offer. Tickets are limited and are on sale for a limited amount of time. Book yours now!',
-
-          links: ['tokopedia.tickets/memes', 'tiket.co/memers'],
+          links: JSON.stringify(['tokopedia.tickets/memes', 'tiket.co/memers']),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -36,8 +34,7 @@ module.exports = {
           estPrice: 5000000,
           description:
             'Get your tickets now to the hottest musical festival of the season! Located in the heart of the city, come and enjoy the musical wonders of some of the greatest bands Indonesia has to offer. Tickets are limited and are on sale for a limited amount of time. Book yours now!',
-
-          links: ['tokopedia.tickets/memes', 'tiket.co/memers'],
+          links: JSON.stringify(['tokopedia.tickets/memes', 'tiket.co/memers']),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -48,8 +45,7 @@ module.exports = {
           estPrice: 5000000,
           description:
             'Get your tickets now to the hottest musical festival of the season! Located in the heart of the city, come and enjoy the musical wonders of some of the greatest bands Indonesia has to offer. Tickets are limited and are on sale for a limited amount of time. Book yours now!',
-
-          links: ['tokopedia.tickets/memes', 'tiket.co/memers'],
+          links: JSON.stringify(['tokopedia.tickets/memes', 'tiket.co/memers']),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -60,8 +56,7 @@ module.exports = {
           estPrice: 5000000,
           description:
             'Get your tickets now to the hottest musical festival of the season! Located in the heart of the city, come and enjoy the musical wonders of some of the greatest bands Indonesia has to offer. Tickets are limited and are on sale for a limited amount of time. Book yours now!',
-
-          links: ['tokopedia.tickets/memes', 'tiket.co/memers'],
+          links: JSON.stringify(['tokopedia.tickets/memes', 'tiket.co/memers']),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
