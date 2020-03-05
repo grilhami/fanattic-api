@@ -69,6 +69,7 @@ app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/merchandise', merchandiseRoute);
 app.use('/event', eventRoute);
+app.use('/music', require('./routes/musicRoute'));
 
 app.listen(port, () =>
   console.log(

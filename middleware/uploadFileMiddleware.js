@@ -36,3 +36,18 @@ exports.uploadPost = multer({
     fileSize: 1024 * 1024 * 5,
   },
 });
+
+exports.uploadMusic = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      req.dest = 'music';
+      cb(null, path.join(__dirname, `../uploads/${req.dest}`));
+    },
+    filename: (req, file, cb) => {
+      cb(
+        null,
+        new Date().toISOString().replace(/:/g, '-') + file.originalname.trim(),
+      );
+    },
+  }),
+});
