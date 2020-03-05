@@ -13,14 +13,10 @@ router.post('/post', uploadPost.single('image'), authMiddleware, postC.create);
 router.post('/getPostUser', postC.getPostUser);
 
 router.post('/comment', authMiddleware, commentC.create);
-// router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
+router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
 
-router.post('/add-to-bookmarks', authMiddleware, postC.addToSavedPosts);
-router.post(
-  '/remove-from-bookmarks',
-  authMiddleware,
-  postC.removeFromSavedPosts,
-);
+router.post('/addToBookmarks', authMiddleware, postC.addToSavedPosts);
+router.post('/removeFromBookmarks', authMiddleware, postC.removeFromSavedPosts);
 
 router.post('/getPostByUser', authMiddleware, postC.getPostUser);
 router.post('/report/:postId', postC.report);

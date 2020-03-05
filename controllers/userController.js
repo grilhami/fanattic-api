@@ -216,7 +216,13 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
-  // getEvent: (req, res) => {
-  //   const { userId } = req.params;
-  // },
+  addStory: (req, res) => {
+    const {id: userId} = res.userData
+  },
+  showStory: (req,res) => {
+    const {id: userId} = res.userData
+  },
+  profile: (req,res) => {
+    const {id: userId} = res.userData
+  }
 };

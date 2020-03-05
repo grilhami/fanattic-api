@@ -29,6 +29,6 @@ module.exports = {
           data,
         }),
       )
-      .catch(err => errorHandler(err));
+      .catch(err => errorHandler(res, err));
   },
 };
