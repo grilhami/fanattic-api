@@ -5,6 +5,7 @@ const {
   user,
   user_saved_posts,
   reported_post,
+  report_type,
 } = require('../models');
 const { errorHandler } = require('../helpers');
 
@@ -208,15 +209,23 @@ module.exports = {
   },
   report: (req, res) => {
     const { postId } = req.params;
-    const { userComment } = req.body;
+    const { userComment, report_typeId } = req.body;
     reported_post
       .create({
         postId,
-        report_typeId: 1,
+        report_typeId,
         userComment,
       })
       .then(() => {
-        res.status(200).json();
+        res.status(200).json({ message: 'report success' });
+      })
+      .catch(err => errorHandler(res, err));
+  },
+  getReportTypes: (req, res) => {
+    report_type
+      .findAll({})
+      .then(data => {
+        res.status(200).json({ message: 'get report types', data });
       })
       .catch(err => errorHandler(res, err));
   },
