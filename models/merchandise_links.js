@@ -2,6 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const merchandise_links = sequelize.define(
     'merchandise_links',
     {
+      merchandiseId: DataTypes.INTEGER,
       url: DataTypes.STRING,
     },
     {},

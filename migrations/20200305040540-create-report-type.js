@@ -1,29 +1,14 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('events', {
+    return queryInterface.createTable('report_types', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      title: {
+      name: {
         type: Sequelize.STRING,
-      },
-      date: {
-        type: Sequelize.DATE,
-      },
-      location: {
-        type: Sequelize.STRING,
-      },
-      estPrice: {
-        type: Sequelize.INTEGER,
-      },
-      description: {
-        type: Sequelize.TEXT,
-      },
-      links: {
-        type: Sequelize.JSON,
       },
       createdAt: {
         allowNull: false,
@@ -36,6 +21,6 @@ module.exports = {
     });
   },
   down: queryInterface => {
-    return queryInterface.dropTable('events');
+    return queryInterface.dropTable('report_types');
   },
 };

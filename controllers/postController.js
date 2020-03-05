@@ -4,6 +4,7 @@ const {
   comment,
   user,
   user_saved_posts,
+  reported_post,
 } = require('../models');
 const { errorHandler } = require('../helpers');
 
@@ -204,5 +205,19 @@ module.exports = {
       default:
         res.status(400).json({ message: 'status invalid' });
     }
+  },
+  report: (req, res) => {
+    const { postId } = req.params;
+    const { userComment } = req.body;
+    reported_post
+      .create({
+        postId,
+        report_typeId: 1,
+        userComment,
+      })
+      .then(() => {
+        res.status(200).json();
+      })
+      .catch(err => errorHandler(res, err));
   },
 };

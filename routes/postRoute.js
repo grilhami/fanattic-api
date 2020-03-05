@@ -23,5 +23,5 @@ router.post(
 );
 
 router.post('/getPostByUser', authMiddleware, postC.getPostUser);
-
+router.post('/report/:postId', postC.report);
 module.exports = router;

@@ -58,11 +58,17 @@ app.get('/', (req, res) => {
     .send(`Welcome to Fanattic API Running in ${environment} mode`);
 });
 
-const { userRoute, postRoute, merchandiseRoute } = require('./routes');
+const {
+  userRoute,
+  postRoute,
+  merchandiseRoute,
+  eventRoute,
+} = require('./routes');
 
 app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/merchandise', merchandiseRoute);
+app.use('/event', eventRoute);
 
 app.listen(port, () =>
   console.log(
