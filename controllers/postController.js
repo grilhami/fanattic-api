@@ -224,8 +224,8 @@ module.exports = {
   getReportTypes: (req, res) => {
     report_type
       .findAll({})
-      .then(() => {
-        res.status(200).json({ message: 'get report types' });
+      .then(data => {
+        res.status(200).json({ message: 'get report types', data });
       })
       .catch(err => errorHandler(res, err));
   },
