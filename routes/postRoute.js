@@ -8,6 +8,7 @@ const router = Router();
 // const { auth, parser } = require('../helpers');
 
 router.get('/feed/:userId', postC.getFeed);
+router.get('/report-types', postC.getReportTypes);
 
 router.post('/post', uploadPost.single('image'), authMiddleware, postC.create);
 router.post('/getPostUser', postC.getPostUser);
