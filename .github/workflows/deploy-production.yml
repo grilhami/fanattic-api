@@ -36,9 +36,11 @@ jobs:
       - name: Run migrations and server with pm2 config
         uses: appleboy/ssh-action@master
         with:
-          host: 172.105.122.92
+          host: 172.105.122.92:22
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
           script: |
-            ls
+            cd server
+            NODE_ENV=production npx sequelize db:migrate
+            pm2 start ecosystem.config.js --env production
