@@ -23,6 +23,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
+      isHidden: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+      },
       likes: {
         allowNull: false,
         type: Sequelize.INTEGER,

@@ -11,7 +11,9 @@ router.get('/feed/:userId', postC.getFeed);
 router.get('/report-types', postC.getReportTypes);
 
 router.post('/post', uploadPost.single('image'), authMiddleware, postC.create);
-router.post('/getPostUser', postC.getPostUser);
+router.post('/getPostUser', authMiddleware, postC.getPostUser);
+router.post('/updatePost', authMiddleware, postC.updatePost);
+router.post('/deletePost', authMiddleware, postC.deletePost);
 
 router.post('/comment', authMiddleware, commentC.create);
 router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
@@ -21,4 +23,5 @@ router.post('/removeFromBookmarks', authMiddleware, postC.removeFromSavedPosts);
 
 router.post('/getPostByUser', authMiddleware, postC.getPostUser);
 router.post('/report/:postId', postC.report);
+
 module.exports = router;

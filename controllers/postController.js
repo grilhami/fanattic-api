@@ -229,4 +229,27 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  updatePost: (req, res) => {
+    const { postid, caption } = req.body;
+    post
+      .update(
+        {
+          caption,
+        },
+        {
+          where: { _id: postid },
+        },
+      )
+      .then(() => res.status(200).json())
+      .catch(err => errorHandler(res, err));
+  },
+  deletePost: (req, res) => {
+    const { postid } = req.body;
+    post
+      .destroy({
+        where: { _id: postid },
+      })
+      .then(() => res.status(200).json())
+      .catch(err => errorHandler(res, err));
+  },
 };
