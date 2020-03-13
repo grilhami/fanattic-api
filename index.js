@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 const models = require('./models');
 
 models.sequelize
-  .sync()
+  .sync({ logging: false })
   .then(() => {
     console.log('Sequelize sync success. Database looks fine');
   })

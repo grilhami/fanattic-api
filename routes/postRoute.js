@@ -5,9 +5,8 @@ const { postC, commentC } = require('../controllers');
 
 const router = Router();
 
-// const { auth, parser } = require('../helpers');
-
 router.get('/feed/:userId', postC.getFeed);
+router.get('/comments/:postId', postC.getPostComments);
 router.get('/report-types', postC.getReportTypes);
 
 router.post('/post', uploadPost.single('image'), authMiddleware, postC.create);
@@ -25,4 +24,6 @@ router.post(
 
 router.post('/getPostByUser', authMiddleware, postC.getPostUser);
 router.post('/report/:postId', postC.report);
+
+router.delete('/:postId', postC.delete);
 module.exports = router;
