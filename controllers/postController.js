@@ -27,6 +27,7 @@ module.exports = {
         },
         include: [
           {
+            required: false,
             model: comment,
             where: {
               commentId: null,
@@ -38,19 +39,8 @@ module.exports = {
                 attributes: ['id', 'username', 'profilePicture'],
                 required: true,
               },
-              {
-                model: comment,
-                attributes: ['id', 'content'],
-                required: false,
-                include: [
-                  {
-                    model: user,
-                    attributes: ['id', 'username', 'profilePicture'],
-                    required: true,
-                  },
-                ],
-              },
             ],
+            limit: 3,
           },
           {
             model: user,
@@ -62,6 +52,45 @@ module.exports = {
       .then(result => {
         return res.status(200).json({
           message: 'GET Feed',
+          result,
+        });
+      })
+      .catch(err => errorHandler(res, err));
+  },
+  getPostComments: (req, res) => {
+    const { postId } = req.params;
+    const { page } = req.body;
+    const limit = 10;
+    comment
+      .findAll({
+        where: {
+          postId,
+        },
+        include: [
+          {
+            model: user,
+            attributes: ['id', 'username', 'profilePicture'],
+            required: true,
+          },
+          {
+            model: comment,
+            attributes: ['id', 'content'],
+            required: false,
+            include: [
+              {
+                model: user,
+                attributes: ['id', 'username', 'profilePicture'],
+                required: true,
+              },
+            ],
+          },
+        ],
+        offset: (page - 1) * limit,
+        limit: 10,
+      })
+      .then(result => {
+        return res.status(200).json({
+          message: 'GET Comments',
           result,
         });
       })
@@ -249,7 +278,6 @@ module.exports = {
       .destroy({
         where: { _id: postid },
       })
-      .then(() => res.status(200).json())
-      .catch(err => errorHandler(res, err));
+      .then(() => res.status(200).json());
   },
 };
