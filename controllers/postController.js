@@ -32,7 +32,7 @@ module.exports = {
             where: {
               commentId: null,
             },
-            attributes: ['id', 'content'],
+            attributes: ['id', 'userId', 'content'],
             include: [
               {
                 model: user,
