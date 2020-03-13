@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       isHidden: DataTypes.BOOLEAN,
       likes: DataTypes.INTEGER,
       shares: DataTypes.INTEGER,
+      isSocial: DataTypes.BOOLEAN,
+      isDeleted: DataTypes.BOOLEAN,
     },
     {},
   );
