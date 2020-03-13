@@ -14,6 +14,7 @@ module.exports = {
       env_production: {
         NODE_ENV: 'production',
         PORT: 800,
+        JWTTOKEN: 'FANATTIC',
       },
       time: true,
     },
