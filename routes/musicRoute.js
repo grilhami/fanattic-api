@@ -6,7 +6,7 @@ const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = Router();
 
-router.post('/music', uploadMusic.single('music'), authMiddleware, addMusic);
+router.post('/track', uploadMusic.single('music'), authMiddleware, addMusic);
 router.post('/playList', authMiddleware, playList);
 
 module.exports = router;
