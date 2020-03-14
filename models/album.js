@@ -2,7 +2,6 @@ module.exports = (sequelize, DataTypes) => {
     const album = sequelize.define(
       'album',
       {
-        trackId: DataTypes.INTEGER,
         image: DataTypes.STRING,
         title: DataTypes.STRING,
         genre: DataTypes.STRING,
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 
     album.associate = models => {
       // associations can be defined here
-      album.hasMany(models.track, { foreignKey: 'trackId' });
+      album.hasMany(models.track, { foreignKey: "trackId", as: "tracks"});
     };
     return album;
   };

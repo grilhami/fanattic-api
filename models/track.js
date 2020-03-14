@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         lyricsPublisher: DataTypes.STRING,
         yearOfComposition: DataTypes.INTEGER,
         masterRecordingOwner: DataTypes.STRING,
-        yearOfRecording: DataTypes.STRING,
+        yearOfRecording: DataTypes.INTEGER,
         releaseLanguage: DataTypes.STRING,
         copyrights: DataTypes.STRING,
       },
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
 
     track.associate = models => {
         // associations can be defined here
-        track.belongsTo(models.album, { foreignKey: 'utrackId' });
+        track.belongsTo(models.album, { foreignKey: "trackId"});
     };
 
     return track;
