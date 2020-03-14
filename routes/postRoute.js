@@ -16,6 +16,8 @@ router.post('/updatePost', authMiddleware, postC.updatePost);
 router.post('/deletePost', authMiddleware, postC.deletePost);
 
 router.post('/comment', authMiddleware, commentC.create);
+
+// potential BUG
 //router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
 
 router.post('/addToBookmarks', authMiddleware, postC.addToSavedPosts);

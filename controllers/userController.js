@@ -1,5 +1,6 @@
 const moment = require('moment');
-const { generateHash, compareHash, decrypt } = require('../helpers').encryption;
+const { generateHash, compareHash, 
+        decrypt, encrypt } = require('../helpers').encryption;
 const { Sequelize, sequelize, user } = require('../models');
 
 const { Op } = Sequelize;
@@ -26,7 +27,8 @@ module.exports = {
         },
       });
 
-      const dp = decrypt(ep); // decrypted password
+      const password = encrypt(ep);
+      const dp = decrypt(password); // decrypted password
       if (!userObj) {
         return res.status(404).json({
           message: 'Wrong email, username, or password',
@@ -79,7 +81,11 @@ module.exports = {
         debug: req.body,
       });
     }
-    const dp = decrypt(ep); // decrypted password
+
+    // Potential BUG
+    // Temporary fix
+    const password = encrypt(ep);
+    const dp = decrypt(password); // decrypted password
     user
       .findOne({ where: { email } })
       .then(obj => {
