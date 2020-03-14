@@ -79,7 +79,7 @@ module.exports = {
         debug: req.body,
       });
     }
-    const dp = decrypt(ep); // decrypted password
+    // const dp = decrypt(ep); // decrypted password
     user
       .findOne({ where: { email } })
       .then(obj => {

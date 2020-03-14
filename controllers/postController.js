@@ -266,7 +266,7 @@ module.exports = {
           caption,
         },
         {
-          where: { _id: postid },
+          where: { id: postid },
         },
       )
       .then(() => res.status(200).json())
@@ -276,8 +276,9 @@ module.exports = {
     const { postid } = req.body;
     post
       .destroy({
-        where: { _id: postid },
+        where: { id: postid },
       })
-      .then(() => res.status(200).json());
+      .then(() => res.status(200).json())
+      .catch(err => errorHandler(res, err));
   },
 };
