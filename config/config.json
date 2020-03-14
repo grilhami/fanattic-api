@@ -1,11 +1,12 @@
 {
   "development": {
-    "username": "root",
-    "password": "031998",
-    "database": "fanattic",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "connectTimeout": 60000
+  "username": "root",
+  "password": "031998",
+  "database": "fanattic",
+  "host": "127.0.0.1",
+  "dialect": "sqlite",
+  "storage": "db.sqlite",
+  "connectTimeout": 60000
   },
   "test": {
     "username": "root",
