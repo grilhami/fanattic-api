@@ -133,12 +133,95 @@ module.exports = {
                     albumYear,
                     releaseLanguage, 
                     copyrights, 
-                    collectionType
+                    collectionType,
+                    image: req.file.originalname
                 },
                 { transaction: albumTransaction },
                 );
                 
                 return savedAlbumkObj;
+            }).then(
+                data => res.status(200).json({
+                    message: 'Album created',
+                    data,
+                }),
+            ).catch(
+                err => errorHandler(res, err)
+            );
+        
+    },
+    allAlbums: (req, res) => {
+        album.findAll().then(data =>
+            res.status(200).json({
+            message: 'Get albums',
+            data,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
+
+    updateAlbum: (req, res) => {
+        const { albumId } = req.params;
+        const { 
+            title, 
+            genre, 
+            subgenre, 
+            length, 
+            numberOfTracks, 
+            primaryArtist, 
+            featuredArtist, 
+            publisher, 
+            additionalContributors,
+            albumYear,
+            releaseLanguage, 
+            copyrights, 
+            collectionType} = req.body;
+        
+        console.log(req.file);
+
+        if (!title || !genre || !subgenre || 
+            !length || !numberOfTracks || !primaryArtist ||
+            !featuredArtist  || !publisher || !albumId ||
+            !additionalContributors || !albumYear || !releaseLanguage ||
+            !copyrights || !collectionType || !req.file) {
+                return res.status(400).json({
+                    message: "Something wrong with updating album",
+                    debug: req.body,
+            });
+        }
+
+        return sequelize
+            .transaction(async albumTransaction => {
+
+                const albumData = {
+                    title, 
+                    genre, 
+                    subgenre, 
+                    length, 
+                    numberOfTracks, 
+                    primaryArtist, 
+                    featuredArtist, 
+                    publisher, 
+                    additionalContributors,
+                    albumYear,
+                    releaseLanguage, 
+                    copyrights, 
+                    collectionType,
+                    image: req.file.originalname
+                };
+
+                const updatedAlbumkObj = await album.update(
+                    albumData,
+                    {
+                        where: { id: albumId},
+                    },
+                    { 
+                        transaction: albumTransaction 
+                    },
+                );
+                
+                return updatedAlbumkObj;
             }).then(
                 result => res.status(200).json({
                     message: 'Album created',
@@ -146,8 +229,8 @@ module.exports = {
                 }),
             ).catch(
                 err => errorHandler(res, err)
-            );
-        
+        );
+
     },
     playList: (req,res) => {
         const {id: userId} = res.userData
