@@ -11,10 +11,10 @@ const { errorHandler, jwt } = require('../helpers');
 module.exports = {
   login: async (req, res) => {
     try {
-      const { email, ep } = req.body;
-      if (!email || !ep) {
+      const { email, ep, password } = req.body;
+      if (!email || !password) {
         return res.status(400).json({
-          message: `email and ep is required`,
+          message: `email and password is required`,
           debug: req.body,
         });
       }
@@ -27,15 +27,14 @@ module.exports = {
         },
       });
 
-      const password = encrypt(ep);
-      const dp = decrypt(password); // decrypted password
+      // const dp = decrypt(ep); // decrypted password
       if (!userObj) {
         return res.status(404).json({
           message: 'Wrong email, username, or password',
           error: 'Wrong email, username, or password',
         });
       }
-      if (!compareHash(dp, userObj.password)) {
+      if (!compareHash(password, userObj.password)) {
         return res.status(401).json({
           message: 'Wrong email, username, or password',
           error: 'Wrong email, username, or password',
@@ -82,10 +81,7 @@ module.exports = {
       });
     }
 
-    // Potential BUG
-    // Temporary fix
-    const password = encrypt(ep);
-    const dp = decrypt(password); // decrypted password
+    // const dp = decrypt(ep); // decrypted password
     user
       .findOne({ where: { email } })
       .then(obj => {
@@ -100,7 +96,8 @@ module.exports = {
           email,
           username,
           fullName,
-          ep,
+          // ep,
+          password,
           phone,
         });
 
@@ -117,7 +114,7 @@ module.exports = {
                 {
                   email,
                   username,
-                  password: generateHash(dp),
+                  password: generateHash(password),
                   fullName,
                   bio,
                   phone,
@@ -232,12 +229,12 @@ module.exports = {
       .catch(err => errorHandler(res, err));
   },
   addStory: (req, res) => {
-    const {id: userId} = res.userData
+    const { id: userId } = res.userData;
   },
-  showStory: (req,res) => {
-    const {id: userId} = res.userData
+  showStory: (req, res) => {
+    const { id: userId } = res.userData;
   },
-  profile: (req,res) => {
-    const {id: userId} = res.userData
-  }
+  profile: (req, res) => {
+    const { id: userId } = res.userData;
+  },
 };

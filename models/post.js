@@ -8,12 +8,14 @@ module.exports = (sequelize, DataTypes) => {
       isHidden: DataTypes.BOOLEAN,
       likes: DataTypes.INTEGER,
       shares: DataTypes.INTEGER,
+      isSocial: DataTypes.BOOLEAN,
+      isDeleted: DataTypes.BOOLEAN,
     },
     {},
   );
   post.associate = models => {
     // associations can be defined here
-    post.hasMany(models.comment, { foreignKey: 'postId' });
+    post.hasMany(models.comment, { foreignKey: 'postId', onDelete: 'CASCADE' });
 
     post.belongsTo(models.user, { foreignKey: 'userId' });
   };
