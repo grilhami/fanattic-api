@@ -9,7 +9,7 @@ router.get('/feed/:userId', postC.getFeed);
 router.get('/comments/:postId', postC.getPostComments);
 router.get('/report-types', postC.getReportTypes);
 
-router.post('/post', uploadPost.single('image'), authMiddleware, postC.create);
+router.post('/post', authMiddleware, uploadPost.single('image'), postC.create);
 router.post('/getPostUser', authMiddleware, postC.getPostUser);
 router.post('/updatePost', authMiddleware, postC.updatePost);
 router.post('/deletePost', authMiddleware, postC.deletePost);
@@ -17,7 +17,7 @@ router.post('/deletePost', authMiddleware, postC.deletePost);
 router.post('/comment', authMiddleware, commentC.create);
 
 // potential BUG
-//router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
+// router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
 
 router.post('/addToBookmarks', authMiddleware, postC.addToSavedPosts);
 router.post('/removeFromBookmarks', authMiddleware, postC.removeFromSavedPosts);

@@ -97,7 +97,7 @@ module.exports = {
       .catch(err => errorHandler(res, err));
   },
   create: (req, res) => {
-    const { caption, userId } = req.body;
+    const { caption, userId } = JSON.parse(req.body.data);
     if (!caption || !userId || !req.file) {
       return res.status(400).json({
         message: `userId, image and caption is required`,
