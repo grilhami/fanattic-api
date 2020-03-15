@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
     const track = sequelize.define(
       'track',
       {
-        trackId: DataTypes.INTEGER,
+        albumId: DataTypes.INTEGER,
         image: DataTypes.STRING,
         title: DataTypes.STRING,
         genre: DataTypes.STRING,
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
 
     track.associate = models => {
         // associations can be defined here
-        track.belongsTo(models.album, { foreignKey: "trackId"});
+        track.belongsTo(models.album, { foreignKey: "albumId"});
     };
 
     return track;

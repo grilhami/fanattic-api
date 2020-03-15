@@ -5,7 +5,6 @@ const path = require('path');
 // eslint-disable-next-line consistent-return
 exports.authMiddleware = (req, res, next) => {
   const { token } = req.body;
-  console.log(req.body);
   if (!token) return res.status(400).json({
     message:
       "This is a JWT error."

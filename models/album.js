@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 
     album.associate = models => {
       // associations can be defined here
-      album.hasMany(models.track, { foreignKey: "trackId", as: "tracks"});
+      album.hasMany(models.track, { foreignKey: "albumId", as: "albums"});
     };
     return album;
   };

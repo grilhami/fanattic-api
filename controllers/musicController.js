@@ -8,8 +8,8 @@ const { errorHandler } = require('../helpers');
 
 module.exports = {
     addTrack: (req, res) => {
+        const { albumId } = req.params;
         const { 
-            trackId, 
             title, 
             genre, 
             subgenre, 
@@ -31,8 +31,9 @@ module.exports = {
             yearOfRecording, 
             releaseLanguage, 
             copyrights} = req.body;
+            console.log(req.body);
 
-        if (!trackId || !title || !genre ||
+        if (!albumId || !title || !genre ||
             !subgenre || !writer  || !albumName ||
             !length || !trackNumber || !primaryArtist ||
             !featuredArtist || !composer || !publisher ||
@@ -48,9 +49,9 @@ module.exports = {
 
         return sequelize
             .transaction(async trackTransaction => {
-                const savedTrackObj = await track.create(
-                {
-                    trackId, 
+
+                const trackData = {
+                    albumId, 
                     title, 
                     genre, 
                     subgenre, 
@@ -73,10 +74,13 @@ module.exports = {
                     releaseLanguage, 
                     copyrights,
                     image: req.file.originalname
-                },
-                { transaction: trackTransaction },
+                };
+
+                const savedTrackObj = await track.create( 
+                    trackData,
+                    { transaction: trackTransaction },
                 );
-                console.log("created and returning tracl saved object");
+
                 return savedTrackObj;
             }).then(
                 result => res.status(200).json({
@@ -88,6 +92,20 @@ module.exports = {
             );
         
         
+    },
+
+    allTracksInAlbum: (req, res) => {
+        const { albumId } = req.params;
+        track.findAll({
+            where: {albumId: albumId}
+        }).then(data =>
+            res.status(200).json({
+            message: 'Get tracks for album',
+            data,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
     },
 
     addAlbum: (req, res) => {
@@ -112,15 +130,15 @@ module.exports = {
             !additionalContributors || !albumYear || !releaseLanguage ||
             !copyrights || !collectionType || !req.file) {
                 return res.status(400).json({
-                    message: "Something wrong with creating track",
+                    message: "Something wrong with creating album",
                     debug: req.body,
             });
         }
 
         return sequelize
             .transaction(async albumTransaction => {
-                const savedAlbumkObj = await album.create(
-                {
+
+                const albumData = {
                     title, 
                     genre, 
                     subgenre, 
@@ -135,11 +153,15 @@ module.exports = {
                     copyrights, 
                     collectionType,
                     image: req.file.originalname
-                },
-                { transaction: albumTransaction },
+                };
+
+                const savedAlbumkObj = await album.create(
+                    albumData,
+                    { transaction: albumTransaction },
                 );
                 
                 return savedAlbumkObj;
+
             }).then(
                 data => res.status(200).json({
                     message: 'Album created',
@@ -177,8 +199,6 @@ module.exports = {
             releaseLanguage, 
             copyrights, 
             collectionType} = req.body;
-        
-        console.log(req.file);
 
         if (!title || !genre || !subgenre || 
             !length || !numberOfTracks || !primaryArtist ||
@@ -231,6 +251,19 @@ module.exports = {
                 err => errorHandler(res, err)
         );
 
+    },
+
+    deleteAlbum: (req, res) => {
+        const { albumId } = req.params;
+        album.destroy(
+            { where: {id: albumId} }
+        ).then(
+            () => res.status(200).json({ 
+                 message: "Album Deleted." 
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
     },
     playList: (req,res) => {
         const {id: userId} = res.userData
