@@ -4,12 +4,13 @@ const { showStory } = require('../controllers/userController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { addStory } = require('../controllers/userController');
 const { userC } = require('../controllers');
+const { uploadUser } = require('../middleware/uploadFileMiddleware');
 
 const router = Router();
 
 // const { auth, parser } = require('../helpers');
 
-router.post('/register', userC.register);
+router.post('/register', uploadUser.single('image'), userC.register);
 router.post('/login', userC.login);
 
 router.post('/addStory', authMiddleware, addStory);

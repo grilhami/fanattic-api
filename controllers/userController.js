@@ -73,7 +73,7 @@ module.exports = {
   },
   // eslint-disable-next-line consistent-return
   register: (req, res) => {
-    const { email, username, fullName, ep, phone, bio } = req.body;
+    const { email, username, fullName, ep, phone, bio } = JSON.parse(req.body.data);
     if (!email || !username || !fullName || !ep || !phone || !bio) {
       return res.status(400).json({
         message: 'email, username, fullName, ep, bio, and phone is required',
@@ -117,6 +117,7 @@ module.exports = {
                   password: generateHash(password),
                   fullName,
                   bio,
+                  // profilePicure: enter patht here
                   phone,
                   isVerified: false,
                   lastLogin: moment(),
