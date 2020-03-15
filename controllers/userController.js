@@ -1,5 +1,6 @@
 const moment = require('moment');
-const { generateHash, compareHash, decrypt } = require('../helpers').encryption;
+const { generateHash, compareHash, 
+        decrypt, encrypt } = require('../helpers').encryption;
 const { Sequelize, sequelize, user } = require('../models');
 
 const { Op } = Sequelize;
@@ -72,13 +73,14 @@ module.exports = {
   },
   // eslint-disable-next-line consistent-return
   register: (req, res) => {
-    const { email, username, fullName, ep, phone, password } = req.body;
-    if (!email || !username || !fullName || !password || !phone) {
+    const { email, username, fullName, ep, phone, bio } = req.body;
+    if (!email || !username || !fullName || !ep || !phone || !bio) {
       return res.status(400).json({
-        message: 'email, username, fullName, ep and phone is required',
+        message: 'email, username, fullName, ep, bio, and phone is required',
         debug: req.body,
       });
     }
+
     // const dp = decrypt(ep); // decrypted password
     user
       .findOne({ where: { email } })
@@ -114,6 +116,7 @@ module.exports = {
                   username,
                   password: generateHash(password),
                   fullName,
+                  bio,
                   phone,
                   isVerified: false,
                   lastLogin: moment(),
@@ -130,6 +133,7 @@ module.exports = {
                 token,
                 email: result.email,
                 fullName,
+                bio: result.bio,
                 profilePicture: result.profilePicture,
                 phone: result.phone,
                 isVerified: result.isVerified,
@@ -144,11 +148,11 @@ module.exports = {
   },
   // Keep Login / Get Dashboard Data
   getUserData: (req, res) => {
+    const { username } = req.params; 
     user
       .findOne({
         where: {
-          id: req.user.id,
-          email: req.user.email,
+          username: username
         },
       })
       .then(userObj => {
@@ -163,23 +167,30 @@ module.exports = {
           message: 'GET User Data Successful',
           result: {
             token,
-            id: userObj.id,
             email: userObj.email,
-            firstName: userObj.firstName,
-            lastName: userObj.lastName,
-            role: userObj.role,
-            birthday: userObj.birthday,
+            fullName: userObj.fullName,
+            username: userObj.username,
+            bio: userObj.bio,
             profilePicture: userObj.profilePicture,
-            gender: userObj.gender,
-            phone: userObj.phone,
-            address: userObj.address,
-            city: userObj.city,
-            postalCode: userObj.postalCode,
-            accountVerified: userObj.isVerified,
-            membership: userObj.membership,
-            lastProfession: userObj.lastProfession,
-            referral: userObj.referral,
-            attendees: userObj.attendees,
+            isVerified: userObj.isVerified
+            // id: userObj.id,
+            // email: userObj.email,
+            // firstName: userObj.firstName,
+            // lastName: userObj.lastName,
+            // role: userObj.role,
+            // bio: userObj.bio,
+            // birthday: userObj.birthday,
+            // profilePicture: userObj.profilePicture,
+            // gender: userObj.gender,
+            // phone: userObj.phone,
+            // address: userObj.address,
+            // city: userObj.city,
+            // postalCode: userObj.postalCode,
+            // accountVerified: userObj.isVerified,
+            // membership: userObj.membership,
+            // lastProfession: userObj.lastProfession,
+            // referral: userObj.referral,
+            // attendees: userObj.attendees,
           },
         });
       })
