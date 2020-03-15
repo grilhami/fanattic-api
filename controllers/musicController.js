@@ -31,7 +31,6 @@ module.exports = {
             yearOfRecording, 
             releaseLanguage, 
             copyrights} = req.body;
-            console.log(req.body);
 
         if (!albumId || !title || !genre ||
             !subgenre || !writer  || !albumName ||
@@ -102,6 +101,114 @@ module.exports = {
             res.status(200).json({
             message: 'Get tracks for album',
             data,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
+
+    updateTrack: (req, res) => {
+        const { albumId } = req.params;
+        const { trackId } = req.params;
+        const { 
+            title, 
+            genre, 
+            subgenre, 
+            writer, 
+            albumName, 
+            length, 
+            trackNumber, 
+            primaryArtist, 
+            featuredArtist, 
+            composer, 
+            publisher, 
+            producers, 
+            additionalContributors, 
+            explicitContent, 
+            lyricsLanguage, 
+            lyricsPublisher, 
+            yearOfComposition, 
+            masterRecordingOwner, 
+            yearOfRecording, 
+            releaseLanguage, 
+            copyrights} = req.body;
+
+        if (!albumId || !title || !genre ||
+            !subgenre || !writer  || !albumName ||
+            !length || !trackNumber || !primaryArtist ||
+            !featuredArtist || !composer || !publisher ||
+            !producers || !additionalContributors || !explicitContent ||
+            !lyricsLanguage || !lyricsPublisher || !yearOfComposition ||
+            !masterRecordingOwner || !yearOfRecording || !releaseLanguage ||
+            !copyrights || !req.file || !trackId) {
+                return res.status(400).json({
+                    message: "Something wrong with creating track",
+                    debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async trackTransaction => {
+            const trackData = {
+                albumId, 
+                title, 
+                genre, 
+                subgenre, 
+                writer, 
+                album, 
+                length, 
+                trackNumber, 
+                primaryArtist, 
+                featuredArtist, 
+                composer, 
+                publisher, 
+                producers, 
+                additionalContributors, 
+                explicitContent, 
+                lyricsLanguage, 
+                lyricsPublisher, 
+                yearOfComposition, 
+                masterRecordingOwner, 
+                yearOfRecording, 
+                releaseLanguage, 
+                copyrights,
+                image: req.file.originalname
+            };
+
+            const updatedTrackObj = await track.update(
+                trackData,
+                {
+                    where: { 
+                        albumId: albumId,
+                        id: trackId
+                    },
+                },
+                { 
+                    transaction: trackTransaction
+                },
+            );
+
+
+        }).then(
+            result => res.status(200).json({
+                message: 'Track updated.',
+                result,
+            })
+        ).catch(err => errorHandler(res, err));
+
+
+    },
+
+    deleteTrack: (req, res) => {
+        const { albumId } = req.params;
+        const { trackId } = req.params;
+        track.destroy({ 
+            where: {
+                albumId: albumId,
+                id: trackId
+            } 
+        }).then(
+            () => res.status(200).json({ 
+                 message: "Track Deleted." 
             })
         ).catch(
             err => errorHandler(res, err)
