@@ -1,51 +1,53 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
+    return queryInterface.createTable('albums', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      email: {
-        allowNull: true,
+      image: {
         type: Sequelize.STRING,
       },
-      username: {
-        allowNull: false,
+      title: {
         type: Sequelize.STRING,
       },
-      fullName: {
-        allowNull: false,
+      genre: {
         type: Sequelize.STRING,
       },
-      bio: {
-        type: Sequelize.TEXT,
-      },
-      password: {
-        allowNull: false,
+      subgenre: {
         type: Sequelize.STRING,
       },
-      phone: {
-        allowNull: true,
+      length: {
+        type: Sequelize.INTEGER,
+      },
+      numberOfTracks: {
+        type: Sequelize.INTEGER,
+      },
+      primaryArtist: {
         type: Sequelize.STRING,
       },
-      profilePicture: {
+      featuredArtist: {
         type: Sequelize.STRING,
       },
-      isVerified: {
-        defaultValue: false,
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-      },
-      fcmToken: {
-        defaultValue: false,
-        allowNull: true,
+      publisher: {
         type: Sequelize.STRING,
       },
-      lastLogin: {
-        allowNull: false,
-        type: Sequelize.DATE,
+      additionalContributors: {
+        type: Sequelize.STRING,
+      },
+      albumYear: {
+        type: Sequelize.STRING,
+      },
+      releaseLanguage: {
+        type: Sequelize.STRING,
+      },
+      copyrights: {
+        type: Sequelize.STRING,
+      },
+      collectionType: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -57,7 +59,7 @@ module.exports = {
       },
     });
   },
-  down: queryInterface => {
-    return queryInterface.dropTable('users');
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('albums');
   },
 };
