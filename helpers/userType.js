@@ -8,7 +8,7 @@ module.exports = reqBody => {
 
         // End user
         if (reqBody.type == 'end') {
-            if (!reqBody.preferences) {
+            if (!reqBody.preference) {
                 const message = `Not enought data provided for user type ${reqBody.type}`;
                 return (null, message);
             } else {
