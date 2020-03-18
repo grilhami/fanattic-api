@@ -22,3 +22,6 @@
 
 db.sqlite
 uploads
+
+# Visual Studio
+.vs

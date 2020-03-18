@@ -8,9 +8,9 @@ exports.authMiddleware = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (authorization) {
-    token = token || authorization.split(' ')[1];
+    token = token || authorization;
   }
-
+  
   if (!token) return res.status(400).json({
     message:
       "This is a JWT error."
