@@ -112,4 +112,10 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
+
+    allUserStory: (req, res) => {},
+    createUserStory: (req, res) => {},
+    updateUserStory: (req, res) => {},
+    deleteUserStory: (req, res) => {},
+
 };
