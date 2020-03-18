@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       isVerified: DataTypes.BOOLEAN,
       lastLogin: DataTypes.DATE,
       fcmToken: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     {},
   );
@@ -24,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'savedPosts',
     });
+    user.hasOne(models.artist, { foreighKey: "userId" });
   };
   return user;
 };

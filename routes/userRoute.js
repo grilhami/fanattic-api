@@ -20,4 +20,7 @@ router.post('/profile', authMiddleware, profile);
 // Get user data based on username
 router.get('/:username', authMiddleware, getUserData);
 
+// Get subUser
+router.get('/subuser/:subUserType', authMiddleware, userC.allSubUserType);
+
 module.exports = router;

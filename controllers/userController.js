@@ -1,7 +1,7 @@
 const moment = require('moment');
 const { generateHash, compareHash, 
         decrypt, encrypt } = require('../helpers').encryption;
-const { Sequelize, sequelize, user } = require('../models');
+const { Sequelize, sequelize, user, artist } = require('../models');
 
 const { Op } = Sequelize;
 const { validator } = require('../helpers');
@@ -73,8 +73,8 @@ module.exports = {
   },
   // eslint-disable-next-line consistent-return
   register: (req, res) => {
-    const { email, username, fullName, ep, phone, bio } = JSON.parse(req.body.data);
-    if (!email || !username || !fullName || !ep || !phone || !bio) {
+    const { email, username, fullName, password, phone, bio, type } = req.body;
+    if (!email || !username || !fullName || !password || !phone || !bio) {
       return res.status(400).json({
         message: 'email, username, fullName, ep, bio, and phone is required',
         debug: req.body,
@@ -107,6 +107,7 @@ module.exports = {
             .send({ message: 'Invalid Form', error: 'Invalid Form', results });
         }
 
+
         return sequelize
           .transaction(t =>
             user
@@ -127,6 +128,23 @@ module.exports = {
               .then(userObj => userObj),
           )
           .then(result => {
+
+            if (!req.body.label) {
+              return res.status(400).json({
+                message: 'Something wrong with creating subuser.',
+                debug: req.body,
+              });
+            }
+
+            artist.create({
+              userId: result.id,
+              label: req.body.label
+              },
+            ).then( subUserObj => {
+              console.log("Subuser Registered.");
+              return subUserObj;
+            });
+            
             const token = jwt.createToken({ id: result.id });
             return res.status(200).json({
               message: 'Registration Successful',
@@ -228,6 +246,27 @@ module.exports = {
           .catch(err => errorHandler(res, err));
       })
       .catch(err => errorHandler(res, err));
+  },
+
+  // TODO: include other subusers
+  allSubUserType: (req, res) => {
+    const { subUserType } = req.params;
+    console.log(req.params);
+    if (subUserType != "artist") {
+      return res.status(400).json({
+        message: "Something wrong with getting subusers",
+        debug: req.body,
+      });
+    }
+    artist.findAll().then(
+      data =>
+            res.status(200).json({
+            message: 'Get all artists',
+            data,
+            })
+    ).catch(
+      err => errorHandler(res, err)
+    );
   },
   addStory: (req, res) => {
     const { id: userId } = res.userData;
