@@ -7,7 +7,7 @@ const { Sequelize, sequelize,
         content_specialist, god } = require('../models');
 
 const { Op } = Sequelize;
-const { validator,  userType } = require('../helpers');
+const { validator } = require('../helpers');
 
 
 const { errorHandler, jwt } = require('../helpers');
@@ -77,19 +77,19 @@ module.exports = {
   },
   // eslint-disable-next-line consistent-return
   register: (req, res) => {
-    const { email, username, fullName, password, phone, bio} = req.body;
-    if (!email || !username || !fullName || !password || !phone || !bio) {
+    const { email, username, fullName, password, phone, bio, type} = req.body;
+    if (!email || !username || !fullName || !password || !phone || !bio || !type) {
       return res.status(400).json({
-        message: 'email, username, fullName, ep, bio, and phone is required',
+        message: 'email, username, fullName, ep, bio, phone, and type are required',
         debug: req.body,
       });
     }
 
-    // Get user type
-    const type = userType(req.body);
-    if (type[0] == null) {
+    const userTypes = ['end', 'artist', 'manager', 'content', 'god'];
+
+    if (!(userTypes.includes(type))) {
       return res.status(400).json({
-        message: type[1],
+        message: "something wrong with the type field.",
         debug: req.body,
       })
     } 
@@ -135,6 +135,7 @@ module.exports = {
                   phone,
                   isVerified: false,
                   lastLogin: moment(),
+                  type: type
                 },
                 { transaction: t },
               )
@@ -142,15 +143,8 @@ module.exports = {
           )
           .then(result => {
 
-            if (!req.body.label) {
-              return res.status(400).json({
-                message: 'Something wrong with creating subuser.',
-                debug: req.body,
-              });
-            }
-
             // Create 'end' subuser
-            if (type[0] == 'end') {
+            if (req.body.type == 'end') {
               end_user.create({
                 userId: result.id,
                 preference: req.body.preference
@@ -162,7 +156,7 @@ module.exports = {
             }
 
             // Create 'artist' subuser
-            if (type[0] == 'artist') {
+            if (req.body.type == 'artist') {
               artist.create({
                 userId: result.id,
                 label: req.body.label
@@ -174,7 +168,7 @@ module.exports = {
             }
 
             // Create 'manager' subuser
-            if (type[0] == 'manager') {
+            if (req.body.type == 'manager') {
               manager.create({
                 userId: result.id,
                 company: req.body.company
@@ -186,7 +180,7 @@ module.exports = {
             }
 
             // Create 'content' subuser
-            if (type[0] == 'content') {
+            if (req.body.type == 'content') {
               content_specialist.create({
                 userId: result.id,
                 platform: req.body.platform
@@ -198,7 +192,7 @@ module.exports = {
             }
 
             // Create 'god' subuser
-            if (type[0] == 'god') {
+            if (req.body.type == 'god') {
               god.create({
                 userId: result.id,
                 godLabel: req.body.godLabel
@@ -315,14 +309,37 @@ module.exports = {
   // TODO: include other subusers
   allSubUserType: (req, res) => {
     const { subUserType } = req.params;
-    console.log(req.params);
-    if (subUserType != "artist") {
+
+    const userTypes = ['end', 'artist', 'manager', 'content', 'god'];
+
+    if (!(userTypes.includes(subUserType))) {
       return res.status(400).json({
-        message: "Something wrong with getting subusers",
+        message: "something wrong with the type field.",
         debug: req.body,
-      });
+      })
+    } 
+
+    var subUserModel;
+
+    switch (subUserType) {
+      case 'end':
+        subUserModel = end_user;
+        break;
+      case 'artist':
+        subUserModel = artist;
+        break;
+      case 'manager':
+        subUserModel = manager;
+        break;
+      case 'content':
+        subUserModel = content_specialist;
+        break;
+      case 'god':
+        subUserModel = god;
+        break;
     }
-    artist.findAll().then(
+
+    subUserModel.findAll().then(
       data =>
             res.status(200).json({
             message: 'Get all artists',
