@@ -1,6 +1,8 @@
 const {
     sequelize,
-    video
+    video,
+    story,
+    user
   } = require('../models');
 
 const { errorHandler } = require('../helpers');
@@ -113,9 +115,113 @@ module.exports = {
         );
     },
 
-    allUserStory: (req, res) => {},
-    createUserStory: (req, res) => {},
-    updateUserStory: (req, res) => {},
-    deleteUserStory: (req, res) => {},
+    createUserStory: (req, res) => {
+        const { userId } = req.params;
+        const {
+            url,
+        } = req.body;
+
+        if (!url || !req.file) {
+                return res.status(400).json({
+                    message: "Something wrong with creating story",
+                    debug: req.body,
+            })
+        }
+
+        return sequelize.transaction(async userStoryTransaction => {
+            const storyData = {
+                userId: userId,
+                url, 
+                thumbnail: req.file.path};
+            
+            const savedStoryObject = await story.create(
+                storyData,
+                {
+                    transaction: userStoryTransaction,
+                }
+            );
+
+            return savedStoryObject;
+        }
+        ).then(
+            result => res.status(200).json({
+                message: 'Story created',
+                result,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
+    allUserStory: (req, res) => {
+        const { userId } = req.params;
+
+        if (!user) {
+            return res.status(400).json({
+                message: "Something wrong with creating story",
+                debug: req.body,
+        })}
+
+
+        story.findAll({where: {userId: userId}}).then(data =>
+            res.status(200).json({
+            message: 'Get user\'stories',
+            data,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+
+    },
+    updateUserStory: (req, res) => {
+        const { userId } = req.params;
+        const {
+            url,
+        } = req.body;
+
+        if (!url || !req.file) {
+                return res.status(400).json({
+                    message: "Something wrong with creating story",
+                    debug: req.body,
+            })
+        }
+
+        return sequelize.transaction(async userStoryTransaction => {
+            const storyData = {
+                url, 
+                thumbnail: req.file.path};
+            
+            const updatedStoryObject = await story.update(
+                storyData,
+                {
+                    where: {userId: userId}
+                },
+                {
+                    transaction: userStoryTransaction,
+                }
+            );
+
+            return updatedStoryObject;
+        }
+        ).then(
+            result => res.status(200).json({
+                message: 'Story updated',
+                result,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
+    deleteUserStory: (req, res) => {
+        const { userId, storyId } = req.params;
+        story.destroy(
+            { where: {userid: userId, id: storyId} }
+        ).then(
+            () => res.status(200).json({ 
+                 message: "Story Deleted." 
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
 
 };

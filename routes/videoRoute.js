@@ -2,7 +2,9 @@ const { Router } = require('express');
 const { uploadVideoThumbnail } = require('../middleware/uploadFileMiddleware');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { createVideo, allVideos, 
-        updateVideo, deleteVideo } = require('../controllers/videoController');
+        updateVideo, deleteVideo, 
+        createUserStory, allUserStory, 
+        updateUserStory, deleteUserStory} = require('../controllers/videoController');
 
 const router = Router();
 
@@ -13,9 +15,9 @@ router.put("/videos/:videoId",uploadVideoThumbnail.single('thumbnail'), authMidd
 router.delete("/videos/:videoId", authMiddleware, deleteVideo);
 
 // Story CRUD
-// router.get("/stories/:username", authMiddleware, allAlbums);
-// router.post("/stories/:username", uploadMusic.single('image'), authMiddleware, addAlbum);
-// router.put("/stories/:username/:storyId",uploadMusic.single('image'), authMiddleware, updateAlbum);
-// router.delete("/stories/:username/:storyid", authMiddleware, deleteAlbum);
+router.get("/stories/:userId", authMiddleware, allUserStory);
+router.post("/stories/:userId", uploadVideoThumbnail.single('thumbnail'), authMiddleware, createUserStory);
+router.put("/stories/:userId/:storyId",uploadVideoThumbnail.single('thumbnail'), authMiddleware, updateUserStory);
+router.delete("/stories/:userId/:storyId", authMiddleware, deleteUserStory);
 
 module.exports = router;
