@@ -1,7 +1,10 @@
 const moment = require('moment');
 const { generateHash, compareHash, 
         decrypt, encrypt } = require('../helpers').encryption;
-const { Sequelize, sequelize, user, artist } = require('../models');
+const { Sequelize, sequelize, 
+        user, artist, 
+        end_user, manager, 
+        content_specialist, god } = require('../models');
 
 const { Op } = Sequelize;
 const { validator,  userType } = require('../helpers');
@@ -147,6 +150,17 @@ module.exports = {
             }
 
             // Create 'end' subuser
+            if (type[0] == 'end') {
+              end_user.create({
+                userId: result.id,
+                preference: req.body.preference
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Registered.");
+                return subUserObj;
+              });
+            }
+
             // Create 'artist' subuser
             if (type[0] == 'artist') {
               artist.create({
@@ -160,10 +174,40 @@ module.exports = {
             }
 
             // Create 'manager' subuser
+            if (type[0] == 'manager') {
+              manager.create({
+                userId: result.id,
+                company: req.body.company
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Registered.");
+                return subUserObj;
+              });
+            }
 
             // Create 'content' subuser
+            if (type[0] == 'content') {
+              content_specialist.create({
+                userId: result.id,
+                platform: req.body.platform
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Registered.");
+                return subUserObj;
+              });
+            }
 
             // Create 'god' subuser
+            if (type[0] == 'god') {
+              god.create({
+                userId: result.id,
+                godLabel: req.body.godLabel
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Registered.");
+                return subUserObj;
+              });
+            }
             
             const token = jwt.createToken({ id: result.id });
             return res.status(200).json({

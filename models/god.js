@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
       'god',
       {
         userId:DataTypes.INTEGER,
-        company: DataTypes.STRING
+        godLabel: DataTypes.STRING
       },
       {},
     );

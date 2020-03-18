@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
       'content_specialist',
       {
         userId:DataTypes.INTEGER,
-        company: DataTypes.STRING
+        platform: DataTypes.STRING
       },
       {},
     );

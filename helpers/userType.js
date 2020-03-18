@@ -37,7 +37,7 @@ module.exports = reqBody => {
         }
 
         // Content
-        if (reqBody.type == 'end') {
+        if (reqBody.type == 'content') {
             if (!reqBody.platform) {
                 const message = `Not enought data provided for user type ${reqBody.type}`;
                 return (null, message);
