@@ -4,7 +4,8 @@ const { generateHash, compareHash,
 const { Sequelize, sequelize, user, artist } = require('../models');
 
 const { Op } = Sequelize;
-const { validator } = require('../helpers');
+const { validator,  userType } = require('../helpers');
+
 
 const { errorHandler, jwt } = require('../helpers');
 
@@ -73,13 +74,22 @@ module.exports = {
   },
   // eslint-disable-next-line consistent-return
   register: (req, res) => {
-    const { email, username, fullName, password, phone, bio, type } = req.body;
+    const { email, username, fullName, password, phone, bio} = req.body;
     if (!email || !username || !fullName || !password || !phone || !bio) {
       return res.status(400).json({
         message: 'email, username, fullName, ep, bio, and phone is required',
         debug: req.body,
       });
     }
+
+    // Get user type
+    const type = userType(req.body);
+    if (type[0] == null) {
+      return res.status(400).json({
+        message: type[1],
+        debug: req.body,
+      })
+    } 
 
     // const dp = decrypt(ep); // decrypted password
     user
@@ -136,14 +146,24 @@ module.exports = {
               });
             }
 
-            artist.create({
-              userId: result.id,
-              label: req.body.label
-              },
-            ).then( subUserObj => {
-              console.log("Subuser Registered.");
-              return subUserObj;
-            });
+            // Create 'end' subuser
+            // Create 'artist' subuser
+            if (type[0] == 'artist') {
+              artist.create({
+                userId: result.id,
+                label: req.body.label
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Registered.");
+                return subUserObj;
+              });
+            }
+
+            // Create 'manager' subuser
+
+            // Create 'content' subuser
+
+            // Create 'god' subuser
             
             const token = jwt.createToken({ id: result.id });
             return res.status(200).json({
