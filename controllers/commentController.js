@@ -7,9 +7,10 @@ module.exports = {
   // eslint-disable-next-line consistent-return
   create: (req, res) => {
     const { userId, postId, commentId, content } = req.body;
-    if (!userId || !postId || !commentId || !content) {
+    console.log(req.body);
+    if (!userId || !postId || !content) {
       return res.status(400).json({
-        message: `userId, postId, content, and commentId is required`,
+        message: `userId, postId, content,  is required`,
         debug: req.body,
       });
     }
@@ -34,5 +35,22 @@ module.exports = {
         }),
       )
       .catch(err => errorHandler(res, err));
+  },
+
+  getCommentReplies: (req, res) => {
+    const { postId, commentId } = req.params;
+    console.log(req.params)
+    comment.findAll({
+      where: {
+        postId: postId,
+        commentId: commentId
+      }
+    }).then(data => {
+      res.status(200).json({
+        message: 'Get comment\' replies',
+        data,
+        })
+    }).catch(err => errorHandler(res, err));
+
   },
 };

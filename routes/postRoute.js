@@ -14,7 +14,10 @@ router.post('/getPostUser', authMiddleware, postC.getPostUser);
 router.post('/updatePost', authMiddleware, postC.updatePost);
 router.post('/deletePost', authMiddleware, postC.deletePost);
 
+
 router.post('/comment', authMiddleware, commentC.create);
+router.get('/comment/:postId/:commentId', authMiddleware, commentC.getCommentReplies);
+
 
 // potential BUG
 // router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
