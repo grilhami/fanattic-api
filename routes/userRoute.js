@@ -19,6 +19,8 @@ router.post('/profile', authMiddleware, profile);
 
 // Get user data based on username
 router.get('/:username', authMiddleware, getUserData);
+router.put('/:username', authMiddleware, userC.updateUser);
+
 
 // Get subUser
 router.get('/subuser/:subUserType', authMiddleware, userC.allSubUserType);

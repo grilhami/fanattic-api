@@ -320,7 +320,6 @@ module.exports = {
     } 
 
     var subUserModel;
-
     switch (subUserType) {
       case 'end':
         subUserModel = end_user;
@@ -348,6 +347,209 @@ module.exports = {
     ).catch(
       err => errorHandler(res, err)
     );
+  },
+  updateUser: async (req, res) => {
+    const { username } = req.params;
+    const { email, newUsername, fullName, password, phone, bio} = req.body;
+    if (!email || !username || !fullName || !password || !phone || !bio) {
+      return res.status(400).json({
+        message: 'email, username, fullName, ep, bio, phone, and type are required',
+        debug: req.body,
+      });
+    }
+
+    if (!newUsername) {
+      const newUsername = username;
+    }
+
+    const getUser = await user.findOne({ where: {username: username}});
+    const type = getUser.type;
+
+    const userTypes = ['end', 'artist', 'manager', 'content', 'god'];
+
+    if (!(userTypes.includes(type))) {
+      return res.status(400).json({
+        message: "something wrong with the type field.",
+        debug: req.body,
+      })
+    }
+
+    var subUserModel;
+    switch (type) {
+      case 'end':
+        subUserModel = end_user;
+        break;
+      case 'artist':
+        subUserModel = artist;
+        break;
+      case 'manager':
+        subUserModel = manager;
+        break;
+      case 'content':
+        subUserModel = content_specialist;
+        break;
+      case 'god':
+        subUserModel = god;
+        break;
+      default: subUserModel = null;
+    }
+
+    if (subUserModel == null) {
+      return res.status(400).json({
+        message: "Something wrong with the user type.",
+        debug: req.body,
+      })
+    }
+
+    const getSubUserObj = await subUserModel.findOne({where: {userId: getUser.id}});
+    // const dp = decrypt(ep); // decrypted password
+    user
+      .findOne({ where: { email } })
+      .then(obj => {
+        // if (obj) {
+        //   return res.status(409).json({
+        //     message: 'Email already exists!',
+        //     error: 'Email already exists!',
+        //   });
+        // }
+
+        const results = validator({
+          email,
+          username: newUsername,
+          fullName,
+          // ep,
+          password,
+          phone,
+        });
+
+        if (results.length > 0) {
+          return res
+            .status(422)
+            .send({ message: 'Invalid Form', error: 'Invalid Form', results });
+        }
+
+        const userData = {
+          email,
+          username: newUsername,
+          password: generateHash(password),
+          fullName,
+          bio,
+          // profilePicure: enter patht here
+          phone,
+          isVerified: false,
+          lastLogin: moment(),
+          type: type
+        }
+
+        return sequelize
+          .transaction(t =>
+            user
+              .update(
+                userData,
+                { where: { username: username } },
+                { transaction: t }
+              )
+              .then(userObj => userObj),
+          )
+          .then(result => {
+
+            // Create 'end' subuser
+            if (type == 'end') {
+              end_user.update(
+                {
+                  where: {userId: getUser.id},
+                },
+                {
+                preference: req.body.subUser.preference
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Updated.");
+                return subUserObj;
+              });
+            }
+
+            // Create 'artist' subuser
+            if (type == 'artist') {
+              artist.update(
+                {
+                  where: {userId: getUser.id},
+                },
+                {
+                  label: req.body.subUser.label
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Updated.");
+                return subUserObj;
+              });
+            }
+
+            // Create 'manager' subuser
+            if (type == 'manager') {
+              manager.update(
+                {
+                  company: req.body.subUser.company
+                },
+                {
+                  where: {userId: getUser.id},
+                }
+              ).then( subUserObj => {
+                console.log("Subuser Updated.");
+                return subUserObj;
+              });
+            }
+
+            // Create 'content' subuser
+            if (type == 'content') {
+              content_specialist.update(
+                {
+                  where: {userId: getUser.id},
+                },
+                {
+                  platform: req.body.subUser.platform
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Updated.");
+                return subUserObj;
+              });
+            }
+
+            // Create 'god' subuser
+            if (type == 'god') {
+              god.update(
+                {
+                  where: {userId: getUser.id},
+                },
+                {
+                  godLabel: req.body.subUser.godLabel
+                },
+              ).then( subUserObj => {
+                console.log("Subuser Updated.");
+                return subUserObj;
+              });
+            }
+            
+            const token = jwt.createToken({ id: result.id });
+            return res.status(200).json({
+              message: 'Registration Successful',
+              result: {
+                token,
+                email: result.email,
+                fullName,
+                bio: result.bio,
+                profilePicture: result.profilePicture,
+                phone: result.phone,
+                isVerified: result.isVerified,
+                subUser: {
+                  subUser: getSubUserObj.dataValues,
+                }
+              },
+            });
+          })
+          .catch(err => {
+            return errorHandler(res, err);
+          });
+      })
+      .catch(err => errorHandler(res, err));
   },
   addStory: (req, res) => {
     const { id: userId } = res.userData;
