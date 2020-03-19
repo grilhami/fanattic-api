@@ -551,6 +551,54 @@ module.exports = {
       })
       .catch(err => errorHandler(res, err));
   },
+  deleteUser: async (req, res) => {
+    const { username } = req.params;
+
+    const getUser = await user.findOne({ where: {username} })
+    const userId = getUser.id;
+    const subUserType = getUser.type;
+
+    var subUserModel;
+    switch (subUserType) {
+      case 'end':
+        subUserModel = end_user;
+        break;
+      case 'artist':
+        subUserModel = artist;
+        break;
+      case 'manager':
+        subUserModel = manager;
+        break;
+      case 'content':
+        subUserModel = content_specialist;
+        break;
+      case 'god':
+        subUserModel = god;
+        break;
+      default: subUserModel;
+    }
+
+    if (subUserModel == null) {
+      return res.status(400).json({
+        message: `Somethin wrong with for user type for deletion.`,
+        debug: req.body,
+      });
+    }
+
+    subUserModel.destroy(
+      { where: {userId} }
+    ).then(() => {
+      user.destroy(
+        { where: {username} }
+      ).then(() =>
+        res.status(200).json({
+          message: "User deleted."
+        })
+      ).catch(err => errorHandler(res, err))
+    }
+    ).catch(err => errorHandler(res, err));
+  },
+
   addStory: (req, res) => {
     const { id: userId } = res.userData;
   },

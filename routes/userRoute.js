@@ -20,6 +20,7 @@ router.post('/profile', authMiddleware, profile);
 // Get user data based on username
 router.get('/:username', authMiddleware, getUserData);
 router.put('/:username', authMiddleware, userC.updateUser);
+router.delete('/:username', authMiddleware, userC.deleteUser);
 
 
 // Get subUser
