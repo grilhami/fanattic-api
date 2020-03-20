@@ -21,7 +21,11 @@
 /yarn-error.log
 
 db.sqlite
-uploads
+
+uploads/music/*
+uploads/post/*
+uploads/thumbnail/*
+uploads/user/*
 
 # Visual Studio
 .vs

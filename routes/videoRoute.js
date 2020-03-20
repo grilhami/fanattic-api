@@ -16,8 +16,8 @@ router.delete("/videos/:videoId", authMiddleware, deleteVideo);
 
 // Story CRUD
 router.get("/stories/:userId", authMiddleware, allUserStory);
-router.post("/stories/:userId", uploadVideoThumbnail.single('thumbnail'), authMiddleware, createUserStory);
-router.put("/stories/:userId/:storyId",uploadVideoThumbnail.single('thumbnail'), authMiddleware, updateUserStory);
+router.post("/stories/:userId", uploadVideoThumbnail.single('image'), authMiddleware, createUserStory);
+router.put("/stories/:userId/:storyId",uploadVideoThumbnail.single('image'), authMiddleware, updateUserStory);
 router.delete("/stories/:userId/:storyId", authMiddleware, deleteUserStory);
 
 module.exports = router;

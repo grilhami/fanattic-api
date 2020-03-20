@@ -60,31 +60,38 @@ module.exports = {
   getPostComments: (req, res) => {
     const { postId } = req.params;
     const { page } = req.body;
+
+    if (!page || !postId) {
+      return res.status(400).json({
+        message: 'postId and page are required.',
+        debug: req.body,
+      });
+    }
     const limit = 10;
     comment
       .findAll({
         where: {
           postId,
         },
-        include: [
-          {
-            model: user,
-            attributes: ['id', 'username', 'profilePicture'],
-            required: true,
-          },
-          {
-            model: comment,
-            attributes: ['id', 'content'],
-            required: false,
-            include: [
-              {
-                model: user,
-                attributes: ['id', 'username', 'profilePicture'],
-                required: true,
-              },
-            ],
-          },
-        ],
+        // include: [
+        //   {
+        //     model: user,
+        //     attributes: ['id', 'username', 'profilePicture'],
+        //     required: true,
+        //   },
+        //   {
+        //     model: comment,
+        //     attributes: ['id', 'content'],
+        //     required: false,
+        //     include: [
+        //       {
+        //         model: user,
+        //         attributes: ['id', 'username', 'profilePicture'],
+        //         required: true,
+        //       },
+        //     ],
+        //   },
+        // ],
         offset: (page - 1) * limit,
         limit: 10,
       })
