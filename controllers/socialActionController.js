@@ -2,6 +2,16 @@ const { sequelize, social_action, user } = require('../models');
 const { errorHandler } = require('../helpers');
 
 module.exports = {
+    getAllSocialAction: (req, res) => {
+        social_action.findAll().then(data =>
+            res.status(200).json({
+            message: 'Get social actions',
+            data,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
     createSocialAction: async (req, res) => {
         const { artistId } = req.params;
         const { title, description, videoOneUrl,
