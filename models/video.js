@@ -3,7 +3,9 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     url: DataTypes.STRING,
     thumbnail: DataTypes.STRING,
-    duration: DataTypes.INTEGER
+    duration: DataTypes.INTEGER,
+    caption: DataTypes.TEXT
+
   }, {});
   video.associate = function(models) {
     // associations can be defined here

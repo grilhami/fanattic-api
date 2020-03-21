@@ -5,14 +5,16 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       fullName: DataTypes.STRING,
       username: DataTypes.STRING,
-      bio: DataTypes.TEXT,
+      //bio: DataTypes.TEXT,
       password: DataTypes.STRING,
+      age: DataTypes.INTEGER,
       phone: DataTypes.STRING,
-      profilePicture: DataTypes.STRING,
+      //profilePicture: DataTypes.STRING,
       isVerified: DataTypes.BOOLEAN,
       lastLogin: DataTypes.DATE,
       fcmToken: DataTypes.STRING,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      location: DataTypes.STRING
     },
     {},
   );
