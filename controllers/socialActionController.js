@@ -12,6 +12,17 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
+    getArtistSocialAction: (req, res) => {
+        const { artistId } = req.params;
+        social_action.findAll({ where: { artistId } }).then(data =>
+            res.status(200).json({
+            message: 'Get social actions',
+            data,
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
     createSocialAction: async (req, res) => {
         const { artistId } = req.params;
         const { title, description, videoOneUrl,
