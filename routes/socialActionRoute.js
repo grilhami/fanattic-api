@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const { uploadSocialActionCover } = require('../middleware/uploadFileMiddleware');
-const { createSocialAction, getAllSocialAction, 
-        getArtistSocialAction, updateSocialAction } = require('../controllers/socialActionController');
+const { createArtistSocialAction, getAllSocialAction, 
+        getArtistSocialAction, updateArtistSocialAction,
+        deleteSocialActon } = require('../controllers/socialActionController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = Router();
@@ -9,7 +10,8 @@ const router = Router();
 
 router.get("", authMiddleware, getAllSocialAction);
 router.get("/:artistId", authMiddleware, getArtistSocialAction);
-router.post("/:artistId", authMiddleware, uploadSocialActionCover.single("image"),  createSocialAction);
-router.put("/:artistId", authMiddleware, uploadSocialActionCover.single("image"),  updateSocialAction);
+router.post("/:artistId", authMiddleware, uploadSocialActionCover.single("image"),  createArtistSocialAction);
+router.put("/:artistId/:actionId", authMiddleware, uploadSocialActionCover.single("image"),  updateArtistSocialAction);
+router.delete("/:artistId/:actionId", authMiddleware, uploadSocialActionCover.single("image"), deleteSocialActon);
 
 module.exports = router;

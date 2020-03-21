@@ -23,7 +23,7 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
-    createSocialAction: async (req, res) => {
+    createArtistSocialAction: async (req, res) => {
         const { artistId } = req.params;
         const { title, description, videoOneUrl,
                 videoTwoUrl, videoThreeUrl, 
@@ -69,13 +69,13 @@ module.exports = {
         }).catch(err => errorHandler(res, err));
 
     },
-    updateSocialAction: async (req, res) => {
-        const { artistId } = req.params;
+    updateArtistSocialAction: async (req, res) => {
+        const { artistId, actionId } = req.params;
         const { title, description, videoOneUrl,
                 videoTwoUrl, videoThreeUrl, 
                 videoFourUrl } = req.body;
 
-        if (!artistId || !title || !description || !videoOneUrl || !req.file ) {
+        if (!artistId || !actionId || !title || !description || !videoOneUrl || !req.file ) {
             return res.status(400).json({
                 message: "artistId, title, description, image, and videoOneUrl are required.",
                 debug: req.body,
@@ -103,7 +103,10 @@ module.exports = {
                     videoFourUrl
                 },
                 {
-                    where: { artistId }
+                    where: { 
+                        id: actionId,
+                        artistId: artistId 
+                    }
                 },
                 {transaction: socialActionTransaction}
             );
@@ -116,5 +119,18 @@ module.exports = {
               });
         }).catch(err => errorHandler(res, err));
 
+    },
+
+    deleteSocialActon: (req, res) => {
+        const { artistId, actionId } = req.params;
+        social_action.destroy(
+            { where: {id: actionId, artistId: artistId} }
+        ).then(
+            () => res.status(200).json({ 
+                 message: "Social action Deleted." 
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
     },
 };
