@@ -67,3 +67,17 @@ exports.uploadVideoThumbnail = multer({
   }),
 });
 
+exports.uploadSocialActionCover = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      req.dest = 'social_action_cover';
+      cb(null, path.join(__dirname, `../uploads/${req.dest}`));
+    },
+    filename: (req, file, cb) => {
+      cb(
+        null,
+        new Date().toISOString().replace(/:/g, '-') + file.originalname.trim(),
+      );
+    },
+  }),
+});

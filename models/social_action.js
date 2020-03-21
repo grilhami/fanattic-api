@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
         artistId: DataTypes.INTEGER,
         title: DataTypes.STRING,
         description: DataTypes.TEXT,
-        thumbnail: DataTypes.STRING,
+        cover: DataTypes.STRING,
         videoOneUrl: DataTypes.STRING,
         videoTworUrl: DataTypes.STRING,
         videoThreeUrl: DataTypes.STRING,
