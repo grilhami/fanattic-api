@@ -26,6 +26,7 @@ uploads/music/*
 uploads/post/*
 uploads/thumbnail/*
 uploads/user/*
+uploads/social_action_cover/*
 
 # Visual Studio
 .vs

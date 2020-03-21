@@ -1,17 +1,25 @@
-const { sequelize, social_action } = require('../models');
+const { sequelize, social_action, user } = require('../models');
 const { errorHandler } = require('../helpers');
 
 module.exports = {
-    createSocialAction: (req, res) => {
+    createSocialAction: async (req, res) => {
         const { artistId } = req.params;
-        const { title, description, 
-                cover, videoOneUrl,
+        const { title, description, videoOneUrl,
                 videoTwoUrl, videoThreeUrl, 
                 videoFourUrl } = req.body;
 
-        if (!artistId || !title || !description || !cover || !videoOneUrl ) {
+        if (!artistId || !title || !description || !videoOneUrl || !req.file ) {
             return res.status(400).json({
-                message: "artistId, title, description, cover, and videoOneUrl are required.",
+                message: "artistId, title, description, image, and videoOneUrl are required.",
+                debug: req.body,
+              });
+        }
+
+        const userObj = await user.findOne({ where: {id: artistId } });
+
+        if ((userObj == null) || (userObj.type != 'artist')) {
+            return res.status(400).json({
+                message: "User is not an artist.",
                 debug: req.body,
               });
         }
@@ -22,7 +30,7 @@ module.exports = {
                     artistId,
                     title,
                     description,
-                    cover,
+                    cover: req.file.path,
                     videoOneUrl,
                     videoTwoUrl,
                     videoThreeUrl,
@@ -34,7 +42,7 @@ module.exports = {
             return socialActionObj;
         }).then( result => {
             return res.status(200).json({
-                message: 'create Post',
+                message: 'Social action created',
                 result,
               });
         }).catch(err => errorHandler(res, err));

@@ -71,6 +71,7 @@ app.use('/merchandise', merchandiseRoute);
 app.use('/event', eventRoute);
 app.use('/music', require('./routes/musicRoute'));
 app.use('/video', require('./routes/videoRoute'));
+app.use('/social-action', require('./routes/socialActionRoute'));
 
 app.listen(port, () =>
   console.log(
