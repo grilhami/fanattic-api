@@ -175,4 +175,76 @@ module.exports = {
               });
         }).catch(err => errorHandler(res, err));
     },
+    getAllSocialVideo: (req, res) => {
+        const { artistId } = req.params;
+
+        social_action_video.findAll(
+            {
+                where: {artistId}
+            }
+        ).then(result => {
+            return res.status(200).json({
+                message: 'Get social action video',
+                result,
+              });
+        }).catch(
+            
+        );
+    },
+    updateSocialVideo: async (req, res) => {
+        const { artistId, actionId, videoId } = req.params;
+        const { url, title, description } = req.body;
+
+        if ( !artistId || !actionId || !url || !title || !description) {
+            return res.status(400).json({
+                message: "artistId, actionId, url, title, and description are required",
+                debug: req.body,
+              });
+        }
+
+        const userObj = await user.findOne({ where: {id: artistId } });
+
+        if ((userObj == null) || (userObj.type != 'artist')) {
+            return res.status(400).json({
+                message: "User is not an artist.",
+                debug: req.body,
+              });
+        }
+
+        const socialActionObj = await social_action.findOne({ where: {id: actionId } });
+
+        if (socialActionObj == null) {
+            return res.status(400).json({
+                message: "Social action does not exists.",
+                debug: req.body,
+              });
+        }
+
+        return sequelize.transaction(async socialVideoTransaction => {
+            const socialVideoObj = await social_action_video.update(
+                {
+                    url,
+                    title,
+                    description,
+                    cover: req.file.path,
+                },
+                {
+                    where: {
+                        id: videoId,
+                        artistId,
+                        socialActionId: actionId
+                    }
+                },
+                { transaction: socialVideoTransaction }
+            );
+
+            return socialVideoObj;
+        }).then( result => {
+            return res.status(200).json({
+                message: 'Social action video updated',
+                result,
+              });
+        }).catch(err => errorHandler(res, err));
+
+    },
 };
