@@ -1,4 +1,5 @@
-const { sequelize, social_action, user } = require('../models');
+const { sequelize, social_action, 
+        user, social_action_video } = require('../models');
 const { errorHandler } = require('../helpers');
 
 module.exports = {
@@ -132,5 +133,46 @@ module.exports = {
         ).catch(
             err => errorHandler(res, err)
         );
+    },
+    createSocialVideo: async (req, res) => {
+        const { artistId, actionId } = req.params;
+        const { url, title, description } = req.body;
+
+        if ( !artistId || !actionId || !url || !title || !description) {
+            return res.status(400).json({
+                message: "artistId, actionId, url, title, and description are required",
+                debug: req.body,
+              });
+        }
+
+        const userObj = await user.findOne({ where: {id: artistId } });
+
+        if ((userObj == null) || (userObj.type != 'artist')) {
+            return res.status(400).json({
+                message: "User is not an artist.",
+                debug: req.body,
+              });
+        }
+
+        return sequelize.transaction(async socialVideoTransaction => {
+            const socialVideoObj = await social_action_video.create(
+                {
+                    socialActionId: actionId,
+                    artistId,
+                    url,
+                    title,
+                    description,
+                    cover: req.file.path,
+                },
+                { transaction: socialVideoTransaction }
+            );
+
+            return socialVideoObj;
+        }).then( result => {
+            return res.status(200).json({
+                message: 'Social action video created',
+                result,
+              });
+        }).catch(err => errorHandler(res, err));
     },
 };

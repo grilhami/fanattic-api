@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     social_action.associate = function(models) {
       // associations can be defined here
       social_action.belongsTo(models.artist, { foreignKey: 'artistId' });
+      social_action.hasMany(models.social_action_video, { foreignKey: 'socialActionId' });
     };
     return social_action;
   };
