@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // associations can be defined here
       artist.belongsTo(models.user, { foreignKey: "userId" });
       artist.hasMany(models.social_action, { foreignKey: "artistId" });
+      artist.hasMany(models.social_artist_badge, { foreignKey: 'socialActionId' });
     };
     return artist;
   };

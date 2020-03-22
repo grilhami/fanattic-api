@@ -1,5 +1,6 @@
 const { sequelize, social_action, 
-        user, social_action_video } = require('../models');
+        user, social_action_video,
+        social_artist_badge } = require('../models');
 const { errorHandler } = require('../helpers');
 
 module.exports = {
@@ -188,7 +189,7 @@ module.exports = {
                 result,
               });
         }).catch(
-            
+            err => errorHandler(res, err)
         );
     },
     updateSocialVideo: async (req, res) => {
@@ -257,5 +258,74 @@ module.exports = {
         ).catch(
             err => errorHandler(res, err)
         );
+    },
+
+    getAllSocialArtistBadge: (req, res) => {
+        const { artistId } = req.params;
+
+        social_artist_badge.findAll(
+            {
+                where: {artistId}
+            }
+        ).then(result => {
+            return res.status(200).json({
+                message: 'Get social action video',
+                result,
+              });
+        }).catch(
+            err => errorHandler(res, err)
+        );
+    },
+    createSocialArtistBadge: async (req, res) => {
+        const { artistId, actionId } = req.params;
+        const { name, badgeType } = req.body;
+
+        if (!artistId || !actionId || 
+            !name || !badgeType || !req.file) {
+                return res.status(400).json({
+                    message: "artistId, actionId, badgeName, and badgeType are required.",
+                    debug: req.body,
+                  });
+        }
+
+        const userObj = await user.findOne({ where: {id: artistId } });
+
+        if ((userObj == null) || (userObj.type != 'artist')) {
+            return res.status(400).json({
+                message: "User is not an artist.",
+                debug: req.body,
+              });
+        }
+
+        // const socialActionObj = await social_action.findOne({ where: {id: actionId } });
+
+        // if (socialActionObj == null) {
+        //     return res.status(400).json({
+        //         message: "Social action does not exists.",
+        //         debug: req.body,
+        //       });
+        // }
+
+
+        return sequelize.transaction(async socialArtistBadgeTransaction => {
+            const socialBadgeObj = await social_artist_badge.create(
+                {
+                    artistId,
+                    socialActionId: actionId,
+                    name,
+                    badgeType,
+                    logo: req.file.path,
+                },
+                { transaction: socialArtistBadgeTransaction }
+            );
+
+            return socialBadgeObj;
+        }).then( result => {
+            return res.status(200).json({
+                message: 'Social artist badge created.',
+                result,
+              });
+        }).catch(err => errorHandler(res, err));
+
     },
 };
