@@ -5,7 +5,7 @@ const { createArtistSocialAction, getAllSocialAction,
         deleteSocialActon, createSocialVideo, 
         getAllSocialVideo, updateSocialVideo, 
         deleteSocialVideo, createSocialArtistBadge,
-        getAllSocialArtistBadge } = require('../controllers/socialActionController');
+        getAllSocialArtistBadge, updateSocialArtistBadge } = require('../controllers/socialActionController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = Router();
@@ -20,7 +20,7 @@ router.delete("/:artistId/:actionId", authMiddleware, deleteSocialActon);
 router.get("/:artistId/video", authMiddleware, uploadSocialActionCover.single("image"), getAllSocialVideo);
 router.post("/:artistId/:actionId/video", authMiddleware, uploadSocialActionCover.single("image"), createSocialVideo);
 router.put("/:artistId/:actionId/video/:videoId", authMiddleware, uploadSocialActionCover.single("image"), updateSocialVideo);
-router.delete("/:artistId/:actionId/video/:videoId", authMiddleware, uploadSocialActionCover.single("image"), deleteSocialVideo);
+router.delete("/:artistId/:actionId/video/:videoId", authMiddleware, deleteSocialVideo);
 
 router.get(
         "/:artistId/social-badge", 
@@ -31,6 +31,11 @@ router.post(
         authMiddleware, 
         uploadSocialActionCover.single("image"), 
         createSocialArtistBadge);
+router.put(
+        "/:artistId/:actionId/social-badge/:badgeId", 
+        authMiddleware, 
+        uploadSocialActionCover.single("image"), 
+        updateSocialArtistBadge);
 
 
 module.exports = router;

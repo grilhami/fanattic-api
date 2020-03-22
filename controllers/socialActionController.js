@@ -328,4 +328,50 @@ module.exports = {
         }).catch(err => errorHandler(res, err));
 
     },
+    updateSocialArtistBadge: async (req, res) => {
+        const { artistId, actionId, badgeId } = req.params;
+        const { name, badgeType } = req.body;
+
+        if (!artistId || !actionId || 
+            !name || !badgeType || !req.file) {
+                return res.status(400).json({
+                    message: "artistId, actionId, badgeName, and badgeType are required.",
+                    debug: req.body,
+                  });
+        }
+
+        const userObj = await user.findOne({ where: {id: artistId } });
+
+        if ((userObj == null) || (userObj.type != 'artist')) {
+            return res.status(400).json({
+                message: "User is not an artist.",
+                debug: req.body,
+              });
+        }
+
+        return sequelize.transaction(async socialArtistBadgeTransaction => {
+            const socialBadgeObj = await social_artist_badge.update(
+                {
+                    name,
+                    badgeType,
+                    logo: req.file.path,
+                },
+                {
+                    where: {
+                        id: badgeId,
+                        artistId,
+                        socialActionId: actionId
+                    }
+                },
+                { transaction: socialArtistBadgeTransaction }
+            );
+
+            return socialBadgeObj;
+        }).then( result => {
+            return res.status(200).json({
+                message: 'Social artist badge updated.',
+                result,
+              });
+        }).catch(err => errorHandler(res, err));
+    },
 };
