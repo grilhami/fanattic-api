@@ -3,7 +3,8 @@ const { uploadSocialActionCover } = require('../middleware/uploadFileMiddleware'
 const { createArtistSocialAction, getAllSocialAction, 
         getArtistSocialAction, updateArtistSocialAction,
         deleteSocialActon, createSocialVideo, 
-        getAllSocialVideo, updateSocialVideo } = require('../controllers/socialActionController');
+        getAllSocialVideo, updateSocialVideo, 
+        deleteSocialVideo } = require('../controllers/socialActionController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = Router();
@@ -18,6 +19,7 @@ router.delete("/:artistId/:actionId", authMiddleware, deleteSocialActon);
 router.get("/:artistId/video", authMiddleware, uploadSocialActionCover.single("image"), getAllSocialVideo);
 router.post("/:artistId/:actionId/video", authMiddleware, uploadSocialActionCover.single("image"), createSocialVideo);
 router.put("/:artistId/:actionId/video/:videoId", authMiddleware, uploadSocialActionCover.single("image"), updateSocialVideo);
+router.delete("/:artistId/:actionId/video/:videoId", authMiddleware, uploadSocialActionCover.single("image"), deleteSocialVideo);
 
 
 module.exports = router;

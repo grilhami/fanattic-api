@@ -245,6 +245,17 @@ module.exports = {
                 result,
               });
         }).catch(err => errorHandler(res, err));
-
+    },
+    deleteSocialVideo: (req, res) => {
+        const { artistId, actionId, videoId } = req.params;
+        social_action_video.destroy(
+            { where: {id: videoId, artistId, socialActionId: actionId } }
+        ).then(
+            () => res.status(200).json({ 
+                 message: "Social action video Deleted." 
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
     },
 };
