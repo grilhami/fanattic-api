@@ -374,4 +374,16 @@ module.exports = {
               });
         }).catch(err => errorHandler(res, err));
     },
+    deleteSocialArtistBadge: (req, res) => {
+        const { artistId, actionId, badgeId } = req.params;
+        social_artist_badge.destroy(
+            { where: {id: badgeId, artistId, socialActionId: actionId } }
+        ).then(
+            () => res.status(200).json({ 
+                 message: "Social artist badge Deleted." 
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
 };
