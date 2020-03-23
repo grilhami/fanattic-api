@@ -15,7 +15,7 @@ const { errorHandler, jwt } = require('../helpers');
 module.exports = {
   login: async (req, res) => {
     try {
-      const { email, ep, password } = req.body;
+      const { email, password } = req.body;
       if (!email || !password) {
         return res.status(400).json({
           message: `email and password is required`,
@@ -44,7 +44,6 @@ module.exports = {
           error: 'Wrong email, username, or password',
         });
       }
-
       return sequelize
         .transaction(t =>
           userObj.update(

@@ -1,6 +1,6 @@
 const { sequelize, social_action, 
         user, social_action_video,
-        social_artist_badge } = require('../models');
+        social_artist_badge, social_user_badge } = require('../models');
 const { errorHandler } = require('../helpers');
 
 module.exports = {
@@ -385,5 +385,46 @@ module.exports = {
         ).catch(
             err => errorHandler(res, err)
         );
+    },
+    createUserSocialBadge: async (req, res) => {
+        const { userId, actionId } = req.params;
+        const { name, badgeType } = req.body;
+
+        if (!userId || !actionId || 
+            !name || !badgeType || !req.file) {
+                return res.status(400).json({
+                    message: "artistId, actionId, badgeName, and badgeType are required.",
+                    debug: req.body,
+                  });
+        }
+
+        const userObj = await user.findOne({ where: {id: userId } });
+
+        if ((userObj == null) || (userObj.type != 'end')) {
+            return res.status(400).json({
+                message: "User is not an end-user.",
+                debug: req.body,
+              });
+        }
+
+        return sequelize.transaction(async socialUserBadgeTransaction => {
+            const socialBadgeObj = await social_user_badge.create(
+                {
+                    userId,
+                    socialActionId: actionId,
+                    name,
+                    badgeType,
+                    logo: req.file.path,
+                },
+                { transaction: socialUserBadgeTransaction }
+            );
+
+            return socialBadgeObj;
+        }).then( result => {
+            return res.status(200).json({
+                message: 'Social User badge created.',
+                result,
+              });
+        }).catch(err => errorHandler(res, err));
     },
 };
