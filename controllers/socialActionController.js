@@ -386,6 +386,20 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
+    getUserSocialBadge: (req, res) => {
+        const { userId } = req.params;
+        social_user_badge.findAll({
+            where: { userId }
+        }).then(result => {
+            return res.status(200).json({
+                message: 'Get social user badges',
+                result,
+              });
+        }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
     createUserSocialBadge: async (req, res) => {
         const { userId, actionId } = req.params;
         const { name, badgeType } = req.body;
