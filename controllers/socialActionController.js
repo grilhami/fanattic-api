@@ -441,4 +441,62 @@ module.exports = {
               });
         }).catch(err => errorHandler(res, err));
     },
+    updateUserSocialBadge: async (req, res) => {
+        const { userId, actionId, badgeId } = req.params;
+        const { name, badgeType } = req.body;
+
+        if (!userId || !actionId || 
+            !name || !badgeType || !req.file) {
+                return res.status(400).json({
+                    message: "artistId, actionId, badgeId, name, and badgeType are required.",
+                    debug: req.body,
+                  });
+        }
+
+        const userObj = await user.findOne({ where: {id: userId } });
+
+        if ((userObj == null) || (userObj.type != 'end')) {
+            return res.status(400).json({
+                message: "User is not an end-user.",
+                debug: req.body,
+              });
+        }
+
+        return sequelize.transaction(async socialUserBadgeTransaction => {
+            const socialBadgeObj = await social_user_badge.update(
+                {
+                    name,
+                    badgeType,
+                    logo: req.file.path,
+                },
+                {
+                    where: {
+                        id: badgeId,
+                        userId,
+                        socialActionId: actionId
+                    }
+                },
+                { transaction: socialUserBadgeTransaction }
+            );
+
+            return socialBadgeObj;
+        }).then( result => {
+            return res.status(200).json({
+                message: 'Social User badge updated.',
+                result,
+              });
+        }).catch(err => errorHandler(res, err));
+    },
+    deleteUserSocialBadge: (req, res) => {
+        const { userId, actionId, badgeId } = req.params;
+        social_user_badge.destroy(
+            { where: {id: badgeId, userId, socialActionId: actionId } }
+        ).then(
+            () => res.status(200).json({ 
+                 message: "Social user badge Deleted." 
+            })
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
 };
