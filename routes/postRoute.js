@@ -22,6 +22,7 @@ router.post('/comment/:postId', authMiddleware, commentC.create);
 router.get('/comment/:postId/:commentId', authMiddleware, commentC.getCommentReplies);
 
 // Create Artist Saved Post
+router.get('/:artistId/saved-posts', authMiddleware, postC.getArtistSavedPost);
 router.post('/:artistId/saved-posts/:postId', authMiddleware, postC.createArtistSavedPost);
 
 // potential BUG

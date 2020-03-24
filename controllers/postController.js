@@ -289,6 +289,55 @@ module.exports = {
       .then(() => res.status(200).json())
       .catch(err => errorHandler(res, err));
   },
+  getArtistSavedPost: (req, res) => 
+  {
+    const { artistId } = req.params;
+    const { postId } = req.query;
+
+    if (!artistId) 
+    {
+      return res.status(400).json({
+        message: `ArtistId is required.`,
+        debug: req.body,
+      });
+    }
+
+    let whereSelector;
+
+    if (!postId) 
+    {
+      whereSelector = {
+        where: {
+          artistId
+        }
+      };
+    } else 
+    {
+      whereSelector = {
+        where: {
+          artistId,
+          postId
+        }
+      };
+    }
+
+
+    artist_saved_post.findAll(
+      {
+        whereSelector
+      }
+      ).then(data => 
+        {
+          return res.status(200).json({
+            message: "Get artist saved posts.",
+            data,
+          });
+        }
+      ).catch(
+        err => errorHandler(res, err)
+      );
+
+  },
   createArtistSavedPost: async (req, res) => {
     const { artistId, postId } = req.params;
     if (!artistId || !postId) 
