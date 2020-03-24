@@ -6,6 +6,7 @@ const {
   user_saved_posts,
   reported_post,
   report_type,
+  artist_saved_post,
 } = require('../models');
 const { errorHandler } = require('../helpers');
 
@@ -287,5 +288,64 @@ module.exports = {
       })
       .then(() => res.status(200).json())
       .catch(err => errorHandler(res, err));
+  },
+  createArtistSavedPost: async (req, res) => {
+    const { artistId, postId } = req.params;
+    if (!artistId || !postId) 
+    {
+      return res.status(400).json({
+        message: "artistId and postId required",
+        debug: req.body,
+      });
+    }
+
+    const userObj = await user.findOne({ where: {id: artistId } });
+
+    if ((userObj == null) || (userObj.type != 'artist')) 
+    {
+        return res.status(400).json({
+            message: "User is not an artist.",
+            debug: req.body,
+          });
+      }
+
+    artist_saved_post.findOne(
+      { 
+        where: { postId } 
+      }
+      ).then(result => 
+        {
+          if (result.postId == postId) 
+          {
+            return res.status(400).json({
+              message: "Post already saved.",
+              debug: req.body,
+            });
+          }
+        }
+      ).catch(
+        err => errorHandler(res, err)
+      );
+
+    return sequelize.transaction(async artistSavedPostTransaction => {
+      const artistSavedPostObj = await artist_saved_post.create(
+        {
+          artistId,
+          postId
+        },
+        { transaction: artistSavedPostTransaction }
+      );
+
+      return artistSavedPostObj;
+    }).then(result => 
+      {
+        return res.status(200).json({
+          message: 'Artist saved post created',
+          result,
+        });
+      }
+    ).catch(
+      err => errorHandler(res, err)
+    );
   },
 };

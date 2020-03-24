@@ -21,6 +21,8 @@ router.post('/comment/:postId', authMiddleware, commentC.create);
 // Get comment replies
 router.get('/comment/:postId/:commentId', authMiddleware, commentC.getCommentReplies);
 
+// Create Artist Saved Post
+router.post('/:artistId/saved-posts/:postId', authMiddleware, postC.createArtistSavedPost);
 
 // potential BUG
 // router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);
