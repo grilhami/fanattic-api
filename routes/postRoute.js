@@ -24,6 +24,7 @@ router.get('/comment/:postId/:commentId', authMiddleware, commentC.getCommentRep
 // Create Artist Saved Post
 router.get('/:artistId/saved-posts', authMiddleware, postC.getArtistSavedPost);
 router.post('/:artistId/saved-posts/:postId', authMiddleware, postC.createArtistSavedPost);
+router.delete('/:artistId/saved-posts/:postId', authMiddleware, postC.deleteArtistSavedPost);
 
 // potential BUG
 // router.post('/toggleLikePost', authMiddleware, commentC.toggleLikePost);

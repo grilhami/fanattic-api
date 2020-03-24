@@ -397,4 +397,23 @@ module.exports = {
       err => errorHandler(res, err)
     );
   },
+  deleteArtistSavedPost: (req, res) => 
+  {
+    const { artistId, postId } = req.params;
+
+    artist_saved_post.destroy(
+      {
+        where: {
+          artistId,
+          postId
+        }
+      }
+    ).then(
+      () => res.status(200).json({ 
+        message: "Artist saved post Deleted." 
+      })
+    ).catch(
+      err => errorHandler(res, err)
+    );
+  },
 };
