@@ -1,7 +1,9 @@
 const {
     sequelize,
     track,
-    album
+    album,
+    user,
+    playlist
   } = require('../models');
 
 const { errorHandler } = require('../helpers');
@@ -372,7 +374,44 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
-    playList: (req,res) => {
-        const {id: userId} = res.userData
-    }
+    createPlaylist: async (req, res) => 
+    {
+        const { userId } = req.params;
+        const { name } = req.body;
+
+        if (!userId || !name) 
+        {
+            return res.status(400).json({
+                message: "userId and name required",
+                debug: req.body,
+            });
+        }
+
+        const userObj = await user.findOne({ where: {id: userId } });
+
+        if ((userObj == null) || (userObj.type != 'end')) {
+            return res.status(400).json({
+                message: "User is not an end-user.",
+                debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async playlistTransaction => {
+            const playlistObj = await playlist.create(
+                    {
+                        userId,
+                        name,
+                    },
+                    { transaction: playlistTransaction }
+                );
+
+                return playlistObj;
+            }).then( result => {
+                return res.status(200).json({
+                    message: 'Playlist created.',
+                    result,
+                    });
+            }).catch(err => errorHandler(res, err));
+
+    },
 };

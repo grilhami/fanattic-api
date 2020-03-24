@@ -7,6 +7,7 @@ const {
   reported_post,
   report_type,
   artist_saved_post,
+  playlist
 } = require('../models');
 const { errorHandler } = require('../helpers');
 
