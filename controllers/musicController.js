@@ -433,4 +433,82 @@ module.exports = {
             }).catch(err => errorHandler(res, err));
 
     },
+    updatePlaylist: async (req, res) => 
+    {
+        const { userId, playlistId } = req.params;
+        const { name } = req.body;
+
+        if (!userId || !name) 
+        {
+            return res.status(400).json({
+                message: "userId and name required",
+                debug: req.body,
+            });
+        }
+
+        const userObj = await user.findOne({ where: {id: userId } });
+
+        if ((userObj == null) || (userObj.type != 'end')) {
+            return res.status(400).json({
+                message: "User is not an end-user.",
+                debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async playlistTransaction => {
+            const playlistObj = await playlist.update(
+                    {
+                        name,
+                    },
+                    {
+                        where: {
+                            id: playlistId,
+                            userId
+                        }
+                    }, 
+                    { transaction: playlistTransaction }
+                );
+
+                return playlistObj;
+            }).then( result => 
+                {
+                return res.status(200).json({
+                    message: 'Playlist updated.',
+                    result,
+                    });
+                }
+            ).catch(
+                err => errorHandler(res, err)
+            );
+    },
+    deletePlaylist: (req, res) => 
+    {
+        const { userId, playlistId } = req.params;
+
+        if (!userId || !playlistId) 
+        {
+            return res.status(400).json({
+                message: "userId and playlistId required",
+                debug: req.body,
+            });
+        }
+
+        playlist.destroy(
+            {
+                where: {
+                    id: playlistId,
+                    userId
+                }
+            }
+        ).then(result => 
+            {
+                return res.status(200).json({
+                    message: 'Playlist deleted.',
+                    result,
+                    });
+            }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
 };

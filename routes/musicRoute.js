@@ -6,7 +6,8 @@ const {
     allAlbums, updateAlbum, 
     deleteAlbum, allTracksInAlbum, 
     updateTrack, deleteTrack, 
-    createPlaylist, getPlaylist} = require('../controllers/musicController');
+    createPlaylist, getPlaylist, 
+    updatePlaylist, deletePlaylist} = require('../controllers/musicController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = Router();
@@ -25,5 +26,7 @@ router.delete('/albums/:albumId/tracks/:trackId', authMiddleware, deleteTrack);
 
 router.get('/:userId/playlist', authMiddleware, getPlaylist);
 router.post('/:userId/playlist', authMiddleware, createPlaylist);
+router.put('/:userId/playlist/:playlistId', authMiddleware, updatePlaylist);
+router.delete('/:userId/playlist/:playlistId', authMiddleware, deletePlaylist);
 
 module.exports = router;
