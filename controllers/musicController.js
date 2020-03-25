@@ -4,7 +4,8 @@ const {
     album,
     user,
     playlist,
-    playlist_content
+    playlist_content,
+    genre
   } = require('../models');
 
 const { errorHandler } = require('../helpers');
@@ -630,4 +631,35 @@ module.exports = {
         );
         
     },
+    createGenre: (req, res) =>
+    {
+        const { name } = req.body;
+
+        if (!name) 
+        {
+            return res.status(400).json({
+                message: "Genre name required.",
+                debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async genreTransaction => {
+            const genreObj = await genre.create(
+                    {
+                        name
+                    },
+                    { transaction: genreTransaction }
+                );
+
+                return genreObj;
+            }).then( result => {
+                return res.status(200).json({
+                    message: 'Genre created.',
+                    result,
+                });
+            }).catch(
+                err => errorHandler(res, err)
+            );
+
+    }
 };
