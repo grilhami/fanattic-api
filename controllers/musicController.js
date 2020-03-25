@@ -594,9 +594,40 @@ module.exports = {
                 return res.status(200).json({
                     message: 'Track added to playlist.',
                     result,
-                    });
+                });
             }).catch(
                 err => errorHandler(res, err)
             );
+    },
+    deletePlaylistContent: (req, res) => 
+    {
+        const { playlistId, trackId } = req.params;
+
+        if (!playlistId || !trackId) 
+        {
+            return res.status(400).json({
+                message: "PlaylistId and trackId required.",
+                debug: req.body,
+            });
+        }
+
+        playlist_content.destroy(
+            {
+                where: {
+                    playlistId,
+                    trackId
+                }
+            }
+        ).then(result => 
+            {
+                return res.status(200).json({
+                    message: 'Track deleted to playlist.',
+                    result,
+                });
+            }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+        
     },
 };
