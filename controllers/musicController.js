@@ -374,6 +374,25 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
+    getPlaylist: (req, res) => {
+        const { userId } = req.params;
+        playlist.findAll(
+            {
+                where: {
+                    userId
+                }
+            }
+        ).then(result => 
+            {
+                return res.status(200).json({
+                    message: 'Get playlist.',
+                    result,
+                    });
+            }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
     createPlaylist: async (req, res) => 
     {
         const { userId } = req.params;
