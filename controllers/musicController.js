@@ -631,6 +631,40 @@ module.exports = {
         );
         
     },
+    getGenre: (req, res) => 
+    {
+        const { genreId } = req.query;
+
+        let whereSelector;
+
+        if (!genreId) 
+        {
+            whereSelector = {
+                where: {}
+            }
+        }
+        else
+        {
+            whereSelector = {
+                where: {
+                    id: genreId
+                }
+            }
+        }
+
+        genre.findAll(
+            whereSelector
+        ).then(result => 
+            {
+                return res.status(200).json({
+                    message: 'Getting genres.',
+                    result,
+                });
+            }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
     createGenre: (req, res) =>
     {
         const { name } = req.body;
@@ -660,6 +694,5 @@ module.exports = {
             }).catch(
                 err => errorHandler(res, err)
             );
-
     }
 };
