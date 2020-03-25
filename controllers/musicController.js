@@ -3,7 +3,8 @@ const {
     track,
     album,
     user,
-    playlist
+    playlist,
+    playlist_content
   } = require('../models');
 
 const { errorHandler } = require('../helpers');
@@ -291,7 +292,6 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
-
     updateAlbum: (req, res) => {
         const { albumId } = req.params;
         const { 
@@ -361,7 +361,6 @@ module.exports = {
         );
 
     },
-
     deleteAlbum: (req, res) => {
         const { albumId } = req.params;
         album.destroy(
@@ -510,5 +509,54 @@ module.exports = {
         ).catch(
             err => errorHandler(res, err)
         );
+    },
+    createPlaylistContent: async (req, res) => 
+    {
+        const {userId, playlistId, trackId} = req.params;
+
+        if (!userId || !playlistId || !trackId) 
+        {
+            return res.status(400).json({
+                message: "userId, playlistId, and trackId required",
+                debug: req.body,
+            });
+        }
+
+        const userObj = await user.findOne({ where: {id: userId } });
+
+        if ((userObj == null) || (userObj.type != 'end')) {
+            return res.status(400).json({
+                message: "User is not an end-user.",
+                debug: req.body,
+            });
+        }
+
+        const playlistObj = await playlist.findOne({ where: {id: playlistId } });
+
+        if (playlistObj == null) {
+            return res.status(400).json({
+                message: "Playlist does not exist.",
+                debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async playlistContentTransaction => {
+            const playlistContentObj = await playlist_content.create(
+                    {
+                        playlistId,
+                        trackId
+                    },
+                    { transaction: playlistContentTransaction }
+                );
+
+                return playlistContentObj;
+            }).then( result => {
+                return res.status(200).json({
+                    message: 'Track added to playlist.',
+                    result,
+                    });
+            }).catch(
+                err => errorHandler(res, err)
+            );
     },
 };
