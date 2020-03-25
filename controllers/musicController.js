@@ -510,6 +510,46 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
+    getPlaylistContent: (req, res) => 
+    {
+        const { trackId } = req.query;
+        const { playlistId } = req.params;
+
+        if (!playlistId) 
+        {
+            return res.status(400).json({
+                message: "At least playlistId required",
+                debug: req.body,
+            });
+        }
+
+        let whereSelector;
+
+        if (!trackId) 
+        {
+            whereSelector = {
+                where: {
+                     playlistId
+                }
+            };
+        } else {
+            whereSelector = {
+                playlistId,
+                trackId
+            };
+        }
+
+        playlist_content.findAll(whereSelector).then(result =>
+            {
+                return res.status(200).json({
+                    message: 'Get playlist\'content.',
+                    result,
+                    });
+            }).catch(
+                err => errorHandler(res, err)
+            );
+
+    },
     createPlaylistContent: async (req, res) => 
     {
         const {userId, playlistId, trackId} = req.params;
