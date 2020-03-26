@@ -694,5 +694,41 @@ module.exports = {
             }).catch(
                 err => errorHandler(res, err)
             );
-    }
+    },
+    updateGenre: (req, res) => 
+    {
+        const { genreId } = req.params;
+        const { name } = req.body;
+
+        if (!name || !genreId) 
+        {
+            return res.status(400).json({
+                message: "Genre name and ID required.",
+                debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async genreTransaction => {
+            const genreObj = await genre.create(
+                    {
+                        name
+                    },
+                    {
+                        where: {
+                            id: genreId
+                        }
+                    },
+                    { transaction: genreTransaction }
+                );
+
+                return genreObj;
+            }).then( result => {
+                return res.status(200).json({
+                    message: 'Genre updated.',
+                    result,
+                });
+            }).catch(
+                err => errorHandler(res, err)
+            );
+    },
 };
