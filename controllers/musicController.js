@@ -829,4 +829,41 @@ module.exports = {
                 err => errorHandler(res, err)
             );
     },
+    updateSubgenre: (req, res) => 
+    {
+        const { genreId, subgenreId } = req.params;
+        const { name } = req.body;
+        
+        if (!genreId || !name || !subgenreId) 
+        {
+            return res.status(400).json({
+                message: "Name, genreId, and subgenreId required.",
+                debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async subgenreTransaction => {
+            const subgenreObj = await subgenre.update(
+                    {
+                        name
+                    },
+                    {
+                        where: {
+                            genreId,
+                            id: subgenreId
+                        }
+                    },
+                    { transaction: subgenreTransaction }
+                );
+
+                return subgenreObj;
+            }).then( result => {
+                return res.status(200).json({
+                    message: 'Subgenre updated.',
+                    result,
+                });
+            }).catch(
+                err => errorHandler(res, err)
+            );
+    },
 };

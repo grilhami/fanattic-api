@@ -12,7 +12,7 @@ const {
     deletePlaylistContent, createGenre, 
     getGenre, updateGenre, 
     deleteGenre, createSubgenre, 
-    getSubgenre } = require('../controllers/musicController');
+    getSubgenre, updateSubgenre } = require('../controllers/musicController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = Router();
@@ -49,5 +49,6 @@ router.delete('/genres/:genreId', authMiddleware, deleteGenre);
 // Subgenre
 router.get('/genres/:genreId/subgenres', authMiddleware, getSubgenre);
 router.post('/genres/:genreId/subgenres', authMiddleware, createSubgenre);
+router.put('/genres/:genreId/subgenres/:subgenreId', authMiddleware, updateSubgenre);
 
 module.exports = router;
