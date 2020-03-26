@@ -731,4 +731,33 @@ module.exports = {
                 err => errorHandler(res, err)
             );
     },
+    deleteGenre: (req, res) => 
+    {
+        const { genreId } = req.params;
+
+        if (!genreId) 
+        {
+            return res.status(400).json({
+                message: "Genre ID is required.",
+                debug: req.body,
+            });
+        }
+
+        genre.destroy(
+            {
+                where: {
+                    id: genreId
+                }
+            }
+        ).then(result => 
+            {
+                return res.status(200).json({
+                    message: 'Genre deleted.',
+                    result,
+                });
+            }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+    },
 };
