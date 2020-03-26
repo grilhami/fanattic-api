@@ -5,7 +5,8 @@ const {
     user,
     playlist,
     playlist_content,
-    genre
+    genre,
+    subgenre
   } = require('../models');
 
 const { errorHandler } = require('../helpers');
@@ -759,5 +760,38 @@ module.exports = {
         ).catch(
             err => errorHandler(res, err)
         );
+    },
+    createSubgenre: (req, res) => 
+    {
+        const { genreId } = req.params;
+        const { name } = req.body;
+        console.log(genreId);
+        
+        if (!genreId || !name) 
+        {
+            return res.status(400).json({
+                message: "Name and genreId required.",
+                debug: req.body,
+            });
+        }
+
+        return sequelize.transaction(async subgenreTransaction => {
+            const subgenreObj = await subgenre.create(
+                    {
+                        genreId,
+                        name
+                    },
+                    { transaction: subgenreTransaction }
+                );
+
+                return subgenreObj;
+            }).then( result => {
+                return res.status(200).json({
+                    message: 'Subgenre created.',
+                    result,
+                });
+            }).catch(
+                err => errorHandler(res, err)
+            );
     },
 };
