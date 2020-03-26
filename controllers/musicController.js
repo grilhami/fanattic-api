@@ -761,6 +761,41 @@ module.exports = {
             err => errorHandler(res, err)
         );
     },
+    getSubgenre: (req, res) => 
+    {
+        const { subgenreId } = req.query;
+
+        let whereSelector;
+
+        if (!subgenreId) 
+        {
+            whereSelector = {
+                where: {}
+            }
+        }
+        else
+        {
+            whereSelector = {
+                where: {
+                    id: subgenreId
+                }
+            }
+        }
+
+        subgenre.findAll(
+            whereSelector
+        ).then(result => 
+            {
+                return res.status(200).json({
+                    message: 'Getting subgenres.',
+                    result,
+                });
+            }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+
+    },
     createSubgenre: (req, res) => 
     {
         const { genreId } = req.params;
