@@ -866,4 +866,35 @@ module.exports = {
                 err => errorHandler(res, err)
             );
     },
+    deleteSubgenre: (req, res) => 
+    {
+        const { genreId, subgenreId } = req.params;
+
+        if (!genreId || !subgenreId) 
+        {
+            return res.status(400).json({
+                message: "genreId and subgenreId required.",
+                debug: req.body,
+            });
+        }
+
+        subgenre.destroy(
+            {
+                where: {
+                    genreId,
+                    id: subgenreId
+                }
+            }
+        ).then(result => 
+            {
+                return res.status(200).json({
+                    message: 'Subgenre deleted.',
+                    result,
+                });
+            }
+        ).catch(
+            err => errorHandler(res, err)
+        );
+
+    },
 };
